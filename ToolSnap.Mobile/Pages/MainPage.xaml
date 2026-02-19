@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+
+            <Label 
+            Text="Login"
+            FontSize="28"
+            HorizontalOptions="Center" />
+
+            <Entry
+            x:Name="EmailEntry"
+            Placeholder="Email"
+            Keyboard="Email" />
+
+            <Entry
+            x:Name="PasswordEntry"
+            Placeholder="Password"
+            IsPassword="True" />
+
+            <Button
+            x:Name="LoginButton"
+            Text="Login"
+            Pressed="OnButtonPressed"
+            Released="OnButtonReleased"
+            Clicked="OnLoginClicked"/>
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
