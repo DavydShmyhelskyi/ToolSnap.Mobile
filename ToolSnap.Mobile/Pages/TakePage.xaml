@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.Pages.TakePage"
+             x:Name="TakePageRoot"
+             Title="TakePage">
+
+    <Grid Padding="20"
+          RowDefinitions="Auto,Auto,Auto,Auto"
+          RowSpacing="20">
+
+        <!-- Preview Image -->
+        <Image
+            x:Name="PreviewImage"
+            HeightRequest="250"
+            BackgroundColor="#eee"
+            Aspect="AspectFill"
+            Grid.Row="0" />
+
+        <!-- Buttons Camera / Gallery -->
+        <Grid ColumnDefinitions="*,*"
+              ColumnSpacing="15"
+              Grid.Row="1">
+
+            <Button
+                Text="Camera"
+                Clicked="OnCameraClicked"
+                Grid.Column="0" />
+
+            <Button
+                Text="Gallery"
+                Clicked="OnGalleryClicked"
+                Grid.Column="1" />
+        </Grid>
+
+        <!-- Loader -->
+        <ActivityIndicator
+            Grid.Row="2"
+            IsRunning="{Binding Source={x:Reference TakePageRoot}, Path=IsLoading}"
+            IsVisible="{Binding Source={x:Reference TakePageRoot}, Path=IsLoading}"
+            HeightRequest="40"
+            WidthRequest="40"
+            HorizontalOptions="Center" />
+
+        <!-- Take button -->
+        <Button
+            Text="Take"
+            x:Name="TakeButton"
+            IsEnabled="False"
+            Clicked="OnTakeClicked"
+            HeightRequest="60"
+            FontSize="20"
+            Grid.Row="3" />
+
+    </Grid>
+
+</ContentPage>

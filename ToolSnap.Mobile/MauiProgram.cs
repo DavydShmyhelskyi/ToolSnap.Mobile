@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ToolSnap.Mobile.Services;
 
 namespace ToolSnap.Mobile
 {
@@ -14,10 +15,21 @@ namespace ToolSnap.Mobile
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            builder.Services.AddHttpClient("api", client =>
+            var handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (msg, cert, chain, errors) => true;
+
+            builder.Services.AddSingleton<HttpClient>(sp =>
             {
-                client.BaseAddress = new Uri("http://10.0.2.2:5029/");
+                return new HttpClient(handler)
+                {
+                    BaseAddress = new Uri("https://localhost:7062/")
+                };
             });
+
+
+            builder.Services.AddSingleton<UserSessionService>();
+            builder.Services.AddSingleton<LocationService>();
+            builder.Services.AddSingleton<ToolTakeService>();
 
 
 #if DEBUG

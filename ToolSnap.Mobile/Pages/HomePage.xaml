@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.Pages.HomePage">
+    
+    <VerticalStackLayout
+        Padding="30"
+        Spacing="25"
+        VerticalOptions="Center">
+
+        <Button
+            Text="Take"
+            HeightRequest="60"
+            FontSize="20"
+            Clicked="OnTakeClicked" />
+
+        <Button
+            Text="Return"
+            HeightRequest="60"
+            FontSize="20"
+            Clicked="OnReturnClicked" />
+
+    </VerticalStackLayout>
+</ContentPage>

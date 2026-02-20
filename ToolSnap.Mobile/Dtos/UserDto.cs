@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ToolSnap.Mobile.Dtos
+﻿namespace ToolSnap.Mobile.Dtos
 {
     public class UserDto
     {

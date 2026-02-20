@@ -4,11 +4,37 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ToolSnap.Mobile"
+    xmlns:pages="clr-namespace:ToolSnap.Mobile.Pages"
     Title="ToolSnap.Mobile">
 
     <ShellContent
-        Title="Home"
+        Title=""
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+
+    <FlyoutItem
+        Title="Home"
+        Route="home">
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate pages:HomePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem
+        Title="Profile"
+        Route="profile">
+        <ShellContent
+            Title="Profile"
+            ContentTemplate="{DataTemplate pages:ProfilePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem
+        Title="Taken Tools"
+        Route="taken">
+        <ShellContent
+            Title="Taken Tools"
+            ContentTemplate="{DataTemplate pages:TakenToolsPage}" />
+    </FlyoutItem>
 
 </Shell>
