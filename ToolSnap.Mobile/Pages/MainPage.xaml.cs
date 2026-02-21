@@ -19,16 +19,16 @@ public partial class MainPage : ContentPage
         _session = session;
 
         _session.LoadUser();
+    }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
 
         if (_session.IsLoggedIn)
         {
-            DisplayAlertAsync(
-                "Already logged in",
-                $"Welcome back {_session.CurrentUser?.FullName}",
-                "OK");
+            await Shell.Current.GoToAsync("//home");
         }
     }
-
     private async void OnLoginClicked(object sender, EventArgs e)
     {
         try
