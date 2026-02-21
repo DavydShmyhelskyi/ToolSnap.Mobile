@@ -1,10 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Microsoft.Maui.Media;
 using ToolSnap.Mobile.Dtos;
-
-namespace ToolSnap.Mobile.Services;
+using ToolSnap.Mobile.Services;
 
 public record TakeToolsResult(
     bool Success,
@@ -23,8 +21,10 @@ public class ToolTakeService
         _locationService = locationService;
     }
 
-    public async Task<TakeToolsResult> TakeToolsAsync(
+    // 🔹 УНІВЕРСАЛЬНИЙ метод
+    private async Task<TakeToolsResult> ProcessToolsAsync(
         IReadOnlyList<FileResult> photos,
+        string actionTitle, // "take" або "return"
         CancellationToken cancellationToken = default)
     {
         if (photos == null || photos.Count == 0)
@@ -34,7 +34,7 @@ public class ToolTakeService
 
         try
         {
-            // 1️⃣ Геолокація (можеш прибрати, якщо не треба)
+            // 1️⃣ Геолокація
             double latitude = 0;
             double longitude = 0;
 
@@ -46,13 +46,12 @@ public class ToolTakeService
             }
             catch
             {
-                // якщо не треба падати — просто залишаємо 0,0
+                // залишаємо 0,0
             }
 
-            // 2️⃣ ActionType "Take"
-            // TODO: підставь свій реальний маршрут до контролера ActionType
+            // 2️⃣ ActionType: take / return
             var actionTypeResponse = await _httpClient.GetAsync(
-                "action-types/by-title/take",
+                $"action-types/by-title/{actionTitle}",
                 cancellationToken);
 
             var actionTypeText = await actionTypeResponse.Content.ReadAsStringAsync(cancellationToken);
@@ -81,7 +80,6 @@ public class ToolTakeService
                 Longitude: longitude,
                 ActionTypeId: actionType.Id);
 
-            // TODO: свій маршрут до PhotoSessionController.Create
             var sessionResponse = await _httpClient.PostAsJsonAsync(
                 "photo-sessions",
                 createSession,
@@ -116,12 +114,9 @@ public class ToolTakeService
                 var fileContent = new StreamContent(stream);
                 fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
 
-                // Імена полів мають збігатися з CreatePhotoForDetectionDto:
-                // Guid PhotoSessionId, IFormFile File
                 content.Add(new StringContent(session.Id.ToString()), "PhotoSessionId");
                 content.Add(fileContent, "File", photo.FileName);
 
-                // TODO: свій маршрут до CreatePhotoForDetection
                 var uploadResponse = await _httpClient.PostAsync(
                     "photos-for-detection",
                     content,
@@ -139,8 +134,7 @@ public class ToolTakeService
                 }
             }
 
-            // 5️⃣ Детект через Gemini (backend endpoint)
-            // TODO: свій маршрут до DetectTools(Guid sessionId)
+            // 5️⃣ Детект через Gemini
             var detectResponse = await _httpClient.PostAsync(
                 $"photos-for-detection/detect/{session.Id}",
                 content: null,
@@ -157,7 +151,6 @@ public class ToolTakeService
                     null);
             }
 
-            // detectText = { detection = ... } – бек уже сходив у Gemini і щось зберіг у себе
             return new TakeToolsResult(
                 true,
                 null,
@@ -169,4 +162,16 @@ public class ToolTakeService
             return new TakeToolsResult(false, ex.Message, null, null);
         }
     }
+
+    // 🔹 старий метод – просто врапер
+    public Task<TakeToolsResult> TakeToolsAsync(
+        IReadOnlyList<FileResult> photos,
+        CancellationToken cancellationToken = default)
+        => ProcessToolsAsync(photos, "take", cancellationToken);
+
+    // 🔹 новий – для повернення
+    public Task<TakeToolsResult> ReturnToolsAsync(
+        IReadOnlyList<FileResult> photos,
+        CancellationToken cancellationToken = default)
+        => ProcessToolsAsync(photos, "return", cancellationToken);
 }

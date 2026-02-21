@@ -23,4 +23,12 @@ namespace ToolSnap.Mobile.Dtos
 
     public record CreateToolAssignmentsBatchDto(
         List<CreateToolAssignmentsBatchItemDto> Items);
+
+    public record ReturnToolAssignmentsBatchDto(
+        List<ReturnToolAssignmentsBatchItemDto> Items);
+
+    public record ReturnToolAssignmentsBatchItemDto(
+        Guid ToolAssignmentId,
+        Guid LocationId,
+        Guid ReturnedDetectedToolId);
 }

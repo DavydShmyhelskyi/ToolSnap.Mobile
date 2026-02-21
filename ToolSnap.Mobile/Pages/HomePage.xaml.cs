@@ -16,6 +16,6 @@ public partial class HomePage : ContentPage
     private async void OnReturnClicked(object sender, EventArgs e)
     {
         await DisplayAlertAsync("Return", "Navigate to Return Page", "OK");
-        // await Shell.Current.GoToAsync(nameof(ReturnPage));
+        await Shell.Current.GoToAsync(nameof(ReturnPage));
     }
 }
