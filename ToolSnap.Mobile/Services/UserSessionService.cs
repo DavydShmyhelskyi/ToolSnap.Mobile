@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Storage;
+using System.Net.Http.Json;
 using System.Text.Json;
 using ToolSnap.Mobile.Dtos;
 
@@ -7,17 +8,31 @@ namespace ToolSnap.Mobile.Services;
 public sealed class UserSessionService
 {
     private const string UserKey = "current_user";
+    private readonly AuthTokenService _tokenService;
+
+    public UserSessionService(AuthTokenService tokenService)
+    {
+        _tokenService = tokenService;
+    }
 
     public UserDto? CurrentUser { get; private set; }
 
     public bool IsLoggedIn => CurrentUser != null;
 
-    public void SetUser(UserDto user)
+    public async Task SetUserAsync(AuthenticationResponseDto authResponse)
     {
-        CurrentUser = user;
+        CurrentUser = new UserDto(
+            authResponse.Id,
+            authResponse.FullName,
+            authResponse.Email,
+            authResponse.Role,
+            authResponse.IsActive,
+            authResponse.EmailConfirmed);
 
-        var json = JsonSerializer.Serialize(user);
+        var json = JsonSerializer.Serialize(CurrentUser);
         Preferences.Set(UserKey, json);
+
+        await _tokenService.SetTokensAsync(authResponse.AccessToken, authResponse.RefreshToken);
     }
 
     public void LoadUser()
@@ -34,9 +49,26 @@ public sealed class UserSessionService
         }
     }
 
-    public void Logout()
+    public async Task LogoutAsync(HttpClient httpClient)
     {
-        CurrentUser = null;
-        Preferences.Remove(UserKey);
+        try
+        {
+            var refreshToken = await _tokenService.GetRefreshTokenAsync();
+
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                await httpClient.PostAsJsonAsync("auth/revoke", new RefreshTokenDto(refreshToken));
+            }
+        }
+        catch
+        {
+            // Silent fail - still clear local data
+        }
+        finally
+        {
+            CurrentUser = null;
+            Preferences.Remove(UserKey);
+            _tokenService.ClearTokens();
+        }
     }
 }

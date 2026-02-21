@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using Microsoft.Maui.Devices.Sensors;
 using ToolSnap.Mobile.Dtos;
 using ToolSnap.Mobile.Services;
 
@@ -33,34 +32,12 @@ public partial class MainPage : ContentPage
     {
         try
         {
-            // 🔥 Геолокація (необовʼязково, але контролер її очікує)
-            double longitude = 0;
-            double latitude = 0;
-
-            try
-            {
-                var loc = await Geolocation.GetLocationAsync(new GeolocationRequest(GeolocationAccuracy.Medium));
-
-                if (loc != null)
-                {
-                    longitude = loc.Longitude;
-                    latitude = loc.Latitude;
-                }
-            }
-            catch
-            {
-                // Глушимо — сервер прийме 0,0
-            }
-
-            // 🔥 DTO повністю відповідає контролеру
             var loginRequest = new LoginDto(
                 EmailEntry.Text.Trim(),
-                PasswordEntry.Text,
-                longitude,
-                latitude
+                PasswordEntry.Text
             );
 
-            var response = await _httpClient.PostAsJsonAsync("users/login", loginRequest);
+            var response = await _httpClient.PostAsJsonAsync("auth/login", loginRequest);
             var responseText = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -73,21 +50,19 @@ public partial class MainPage : ContentPage
                 return;
             }
 
-            // 🔥 Твій UserDto — ідеально підходить під відповідь сервера
-            var user = JsonSerializer.Deserialize<UserDto>(
+            var authResponse = JsonSerializer.Deserialize<AuthenticationResponseDto>(
                 responseText,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            if (user == null)
+            if (authResponse == null)
             {
-                await DisplayAlertAsync("Error", "Invalid user data received", "OK");
+                await DisplayAlertAsync("Error", "Invalid authentication data received", "OK");
                 return;
             }
 
-            // 🔥 Зберігаємо користувача
-            _session.SetUser(user);
+            await _session.SetUserAsync(authResponse);
 
-            await DisplayAlertAsync("Success", $"Welcome {user.FullName}", "OK");
+            await DisplayAlertAsync("Success", $"Welcome {authResponse.FullName}", "OK");
 
             await Shell.Current.GoToAsync("//home");
         }

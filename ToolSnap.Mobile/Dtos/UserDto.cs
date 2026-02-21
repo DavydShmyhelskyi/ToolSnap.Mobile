@@ -4,16 +4,24 @@
         Guid Id,
         string FullName,
         string Email,
-        bool ConfirmedEmail,
-        Guid RoleId,
+        string Role,
         bool IsActive,
-        DateTime CreatedAt,
-        double? Longitude,
-        double? Latitude);
+        bool EmailConfirmed);
 
     public record LoginDto(
         string Email, 
-        string Password, 
-        double Longitude, 
-        double Latitude);
+        string Password);
+
+    public record AuthenticationResponseDto(
+        Guid Id,
+        string FullName,
+        string Email,
+        string Role,
+        bool IsActive,
+        bool EmailConfirmed,
+        string AccessToken,
+        string RefreshToken);
+
+    public record RefreshTokenDto(
+        string RefreshToken);
 }
