@@ -14,4 +14,13 @@ namespace ToolSnap.Mobile.Dtos
         Guid? ReturnedLocationId,
         DateTime TakenAt,
         DateTime? ReturnedAt);
+
+    public record CreateToolAssignmentsBatchItemDto(
+        Guid TakenDetectedToolId,
+        Guid ToolId,
+        Guid UserId,
+        Guid LocationId);
+
+    public record CreateToolAssignmentsBatchDto(
+        List<CreateToolAssignmentsBatchItemDto> Items);
 }

@@ -8,6 +8,9 @@ namespace ToolSnap.Mobile
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(TakePage), typeof(TakePage));
+            Routing.RegisterRoute(
+            nameof(ConfirmOnTakeToolAsignmentPage),
+            typeof(ConfirmOnTakeToolAsignmentPage));
         }
     }
 }

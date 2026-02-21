@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ToolSnap.Mobile.Pages.TakenToolsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:Class="ToolSnap.Mobile.Pages.TakenToolsPage"
+             Title="Taken Tools">
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*">
+
+            <!-- Список інструментів -->
+            <CollectionView Grid.Row="1"
+                            x:Name="ToolsCollectionView"
+                            ItemsSource="{Binding Tools}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="100,*"
+                              Padding="10"
+                              Margin="0,4"
+                              BackgroundColor="{DynamicResource SecondaryColor}">
+                            <!-- Фото -->
+                            <Border Grid.Column="0"
+                                WidthRequest="80"
+                                HeightRequest="80"
+                                Padding="0"
+                                StrokeThickness="0"
+                                BackgroundColor="Transparent"
+                                StrokeShape="RoundRectangle 8">
+                                <Image Source="{Binding Photo}"
+                                Aspect="AspectFill" />
+                            </Border>
+
+                            <!-- Інфа про інструмент -->
+                            <VerticalStackLayout Grid.Column="1"
+                                Spacing="4"
+                                Margin="12,0,0,0">
+
+                                <!-- Назва типу інструмента -->
+                                <Label Text="{Binding ToolTypeTitle}"
+                                    FontAttributes="Bold"
+                                    FontSize="16" />
+
+                                <!-- Серійний номер -->
+                                <Label Text="{Binding SerialNumber}"
+                                    FontSize="14"
+                                    TextColor="Gray" />
+
+                            </VerticalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

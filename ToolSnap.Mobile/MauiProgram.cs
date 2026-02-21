@@ -30,8 +30,10 @@ namespace ToolSnap.Mobile
             builder.Services.AddSingleton<UserSessionService>();
             builder.Services.AddSingleton<LocationService>();
             builder.Services.AddSingleton<ToolTakeService>();
-
-
+            builder.Services.AddSingleton<DetectionParsingService>();
+            builder.Services.AddSingleton<DetectedToolsService>();
+            builder.Services.AddSingleton<ToolConfirmationService>();
+            builder.Services.AddSingleton<TakeFlowStateService>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

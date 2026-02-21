@@ -1,13 +1,19 @@
 ﻿namespace ToolSnap.Mobile.Dtos
 {
-    public class UserDto
-    {
-        public Guid Id { get; set; }
-        public string FullName { get; set; } = default!;
-        public string Email { get; set; } = default!;
-        public bool ConfirmedEmail { get; set; }
-        public Guid RoleId { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
-    }
+    public record UserDto(
+        Guid Id,
+        string FullName,
+        string Email,
+        bool ConfirmedEmail,
+        Guid RoleId,
+        bool IsActive,
+        DateTime CreatedAt,
+        double? Longitude,
+        double? Latitude);
+
+    public record LoginDto(
+        string Email, 
+        string Password, 
+        double Longitude, 
+        double Latitude);
 }

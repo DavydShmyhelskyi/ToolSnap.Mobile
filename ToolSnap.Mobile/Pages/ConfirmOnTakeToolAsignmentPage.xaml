@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.Pages.ConfirmOnTakeToolAsignmentPage"
+             Title="Confirm Tools">
+
+    <ContentPage.Content>
+
+        <Grid RowDefinitions="*,Auto" Padding="15">
+
+            <!-- =======================
+                 LIST OF DETECTED TOOLS
+                 ======================= -->
+            <CollectionView x:Name="ItemsCollectionView"
+                            ItemsSource="{Binding Items}"
+                            Grid.Row="0">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Frame Padding="12"
+                               Margin="0,0,0,12"
+                               BorderColor="#ccc"
+                               CornerRadius="10">
+
+                            <VerticalStackLayout Spacing="8">
+
+                                <!-- TOOL TYPE -->
+                                <Label Text="Tool Type"
+                                       FontAttributes="Bold"/>
+                                <Picker ItemsSource="{Binding ToolTypes}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        SelectedItem="{Binding SelectedToolType}"
+                                        Title="Select tool type"/>
+
+                                <!-- BRAND -->
+                                <Label Text="Brand"
+                                       FontAttributes="Bold"/>
+                                <Picker ItemsSource="{Binding Brands}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        SelectedItem="{Binding SelectedBrand}"
+                                        Title="Select brand"/>
+
+                                <!-- MODEL -->
+                                <Label Text="Model"
+                                       FontAttributes="Bold"/>
+                                <Picker ItemsSource="{Binding Models}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        SelectedItem="{Binding SelectedModel}"
+                                        Title="Select model"/>
+
+                                <!-- TOOL -->
+                                <Label Text="Tool"
+                                       FontAttributes="Bold"/>
+                                <Picker ItemsSource="{Binding Tools}"
+                                        ItemDisplayBinding="{Binding SerialNumber}"
+                                        SelectedItem="{Binding SelectedTool}"
+                                        Title="Select tool"/>
+
+
+                                <!-- SERIAL NUMBER -->
+                                <Label Text="Serial Number"
+                                       FontAttributes="Bold"/>
+                                <Entry Text="{Binding SerialNumber}"
+                                       Placeholder="Enter serial number"/>
+
+                                <!-- СИСТЕМНА ІНФА -->
+                                <Label Text="{Binding Confidence, StringFormat='Confidence: {0:F2}'}"
+                                       FontSize="12"
+                                       TextColor="Gray"/>
+
+                            </VerticalStackLayout>
+
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <!-- =======================
+                 CONFIRM BUTTON
+                 ======================= -->
+            <Button Text="Confirm"
+                    Grid.Row="1"
+                    Margin="0,10,0,0"
+                    Padding="12"
+                    FontSize="18"
+                    Clicked="OnConfirmClicked"/>
+
+        </Grid>
+
+    </ContentPage.Content>
+
+</ContentPage>
