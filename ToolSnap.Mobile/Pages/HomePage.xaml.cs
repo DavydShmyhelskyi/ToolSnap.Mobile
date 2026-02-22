@@ -20,6 +20,15 @@ public partial class HomePage : ContentPage
     }
     private async void OnMapClicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(nameof(MapPage));
+        
+        // await Shell.Current.GoToAsync("profile1");
+        try
+        {
+            await Shell.Current.GoToAsync(nameof(MapPage));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Navigation error", ex.ToString(), "OK");
+        }
     }
 }

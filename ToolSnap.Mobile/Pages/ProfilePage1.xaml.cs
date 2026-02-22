@@ -5,12 +5,12 @@ using ToolSnap.Mobile.Services;
 
 namespace ToolSnap.Mobile.Pages;
 
-public partial class ProfilePage : ContentPage
+public partial class ProfilePage1 : ContentPage
 {
     private readonly HttpClient _httpClient;
     private readonly UserSessionService _session;
 
-    public ProfilePage(HttpClient httpClient, UserSessionService session)
+    public ProfilePage1(HttpClient httpClient, UserSessionService session)
     {
         InitializeComponent();
 
@@ -26,18 +26,22 @@ public partial class ProfilePage : ContentPage
 
         if (user is null)
         {
-            // Якщо раптом юзера немає в сесії – відправляємо на логін
             Shell.Current.GoToAsync("//login");
             return;
         }
 
-        // Заповнюємо інформацію про юзера (read-only)
         FullNameLabel.Text = user.FullName;
         EmailLabel.Text = user.Email;
         ConfirmedEmailLabel.Text = user.ConfirmedEmail ? "Yes" : "No";
         IsActiveLabel.Text = user.IsActive ? "Active" : "Inactive";
-        CreatedAtLabel.Text = user.CreatedAt.ToString("g");
+        CreatedAtLabel.Text = user.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm");
+
+        if (user.Latitude is double lat && user.Longitude is double lon)
+            CoordinatesLabel.Text = $"{lat:F5}, {lon:F5}";
+        else
+            CoordinatesLabel.Text = "Not set";
     }
+
     private void OnTogglePasswordPanelClicked(object sender, EventArgs e)
     {
         PasswordPanel.IsVisible = !PasswordPanel.IsVisible;
@@ -45,6 +49,7 @@ public partial class ProfilePage : ContentPage
         TogglePasswordPanelButton.Text =
             PasswordPanel.IsVisible ? "Hide password form" : "Change password";
     }
+
     private async void OnChangePasswordClicked(object sender, EventArgs e)
     {
         var user = _session.CurrentUser;
@@ -60,7 +65,6 @@ public partial class ProfilePage : ContentPage
         var newPassword = NewPasswordEntry.Text;
         var confirmPassword = ConfirmPasswordEntry.Text;
 
-        // Простенька валідація на клієнті
         if (string.IsNullOrWhiteSpace(currentPassword) ||
             string.IsNullOrWhiteSpace(newPassword) ||
             string.IsNullOrWhiteSpace(confirmPassword))
@@ -85,8 +89,8 @@ public partial class ProfilePage : ContentPage
         {
             var body = new
             {
-                currentPassword = currentPassword,
-                newPassword = newPassword
+                currentPassword,
+                newPassword
             };
 
             var request = new HttpRequestMessage(
@@ -98,32 +102,22 @@ public partial class ProfilePage : ContentPage
 
             var response = await _httpClient.SendAsync(request);
 
-            var responseText = await response.Content.ReadAsStringAsync();
-
             if (!response.IsSuccessStatusCode)
             {
-                await DisplayAlertAsync(
-                    "Change password failed",
-                    $"{response.StatusCode}\n{responseText}",
-                    "OK");
+                var errorText = await response.Content.ReadAsStringAsync();
+                await DisplayAlertAsync("Failed", errorText, "OK");
                 return;
             }
 
-            // Сервер повертає оновлений UserDto (без пароля)
             var updatedUser = await response.Content.ReadFromJsonAsync<UserDto>();
-
             if (updatedUser is not null)
-            {
-                // Можемо оновити сесію (на всяк випадок)
                 _session.SetUser(updatedUser);
-            }
 
             await DisplayAlertAsync("Success", "Password updated successfully.", "OK");
 
-            // очищаємо поля
-            CurrentPasswordEntry.Text = string.Empty;
-            NewPasswordEntry.Text = string.Empty;
-            ConfirmPasswordEntry.Text = string.Empty;
+            CurrentPasswordEntry.Text = "";
+            NewPasswordEntry.Text = "";
+            ConfirmPasswordEntry.Text = "";
         }
         catch (Exception ex)
         {

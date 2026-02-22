@@ -2,50 +2,70 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.TakenToolsPage"
-             Title="Taken Tools">
+             Title="Taken Tools"
+             BackgroundColor="#F5F5F5">
 
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,*">
+        <Grid RowDefinitions="Auto,*"
+              Padding="16">
+
+            <!-- Заголовок всередині сторінки -->
+            <Label Grid.Row="0"
+                   Text="Taken tools"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#222222"
+                   Margin="0,0,0,8" />
 
             <!-- Список інструментів -->
             <CollectionView Grid.Row="1"
                             x:Name="ToolsCollectionView"
-                            ItemsSource="{Binding Tools}">
+                            ItemsSource="{Binding Tools}"
+                            SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="100,*"
-                              Padding="10"
-                              Margin="0,4"
-                              BackgroundColor="{DynamicResource SecondaryColor}">
-                            <!-- Фото -->
-                            <Border Grid.Column="0"
-                                WidthRequest="80"
-                                HeightRequest="80"
-                                Padding="0"
-                                StrokeThickness="0"
-                                BackgroundColor="Transparent"
-                                StrokeShape="RoundRectangle 8">
-                                <Image Source="{Binding Photo}"
-                                Aspect="AspectFill" />
-                            </Border>
+                        <!-- Окрема картка -->
+                        <Border Margin="0,4"
+                                Padding="10"
+                                BackgroundColor="White"
+                                Stroke="#E0E0E0"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12">
 
-                            <!-- Інфа про інструмент -->
-                            <VerticalStackLayout Grid.Column="1"
-                                Spacing="4"
-                                Margin="12,0,0,0">
+                            <Grid ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="12">
 
-                                <!-- Назва типу інструмента -->
-                                <Label Text="{Binding ToolTypeTitle}"
-                                    FontAttributes="Bold"
-                                    FontSize="16" />
+                                <!-- Фото -->
+                                <Border WidthRequest="70"
+                                        HeightRequest="70"
+                                        Padding="0"
+                                        StrokeThickness="0"
+                                        BackgroundColor="#EEEEEE"
+                                        StrokeShape="RoundRectangle 8">
 
-                                <!-- Серійний номер -->
-                                <Label Text="{Binding SerialNumber}"
-                                    FontSize="14"
-                                    TextColor="Gray" />
+                                    <Image Source="{Binding Photo}"
+                                           Aspect="AspectFill" />
+                                </Border>
 
-                            </VerticalStackLayout>
-                        </Grid>
+                                <!-- Інфа про інструмент -->
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="4"
+                                                     VerticalOptions="Center">
+
+                                    <!-- Тип інструменту -->
+                                    <Label Text="{Binding ToolTypeTitle}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           TextColor="#222222" />
+
+                                    <!-- Серійний номер -->
+                                    <Label Text="{Binding SerialNumber}"
+                                           FontSize="14"
+                                           TextColor="#777777" />
+
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

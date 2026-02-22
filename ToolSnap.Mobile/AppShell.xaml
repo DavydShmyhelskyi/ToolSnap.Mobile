@@ -25,8 +25,9 @@
         Title="Profile"
         Route="profile">
         <ShellContent
-            Title="Profile"
-            ContentTemplate="{DataTemplate pages:ProfilePage}" />
+    Route="profile1"
+    Title="Profile"
+    ContentTemplate="{DataTemplate pages:ProfilePage1}" />
     </FlyoutItem>
 
     <FlyoutItem
@@ -36,5 +37,5 @@
             Title="Taken Tools"
             ContentTemplate="{DataTemplate pages:TakenToolsPage}" />
     </FlyoutItem>
-
+    
 </Shell>

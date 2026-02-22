@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.Pages.ProfilePage1"
+             Title="Profile"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Заголовок -->
+            <Label Text="Profile"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#222222" />
+
+            <!-- Картка з інформацією -->
+            <Border
+                Padding="16"
+                StrokeThickness="1"
+                Stroke="#E0E0E0"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 16">
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="User info"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="#333333" />
+
+                    <BoxView HeightRequest="1"
+                             BackgroundColor="#EEEEEE" />
+
+                    <Grid ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          ColumnSpacing="8"
+                          RowSpacing="6">
+
+                        <!-- Full name -->
+                        <Label Text="Full name:"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               FontAttributes="Bold"
+                               TextColor="#555555" />
+                        <Label x:Name="FullNameLabel"
+                               Grid.Row="0"
+                               Grid.Column="1"
+                               TextColor="#222222" />
+
+                        <!-- Email -->
+                        <Label Text="Email:"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               FontAttributes="Bold"
+                               TextColor="#555555" />
+                        <Label x:Name="EmailLabel"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               TextColor="#222222" />
+
+                        <!-- Email confirmed -->
+                        <Label Text="Email confirmed:"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               FontAttributes="Bold"
+                               TextColor="#555555" />
+                        <Label x:Name="ConfirmedEmailLabel"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               TextColor="#222222" />
+
+                        <!-- Status -->
+                        <Label Text="Status:"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               FontAttributes="Bold"
+                               TextColor="#555555" />
+                        <Label x:Name="IsActiveLabel"
+                               Grid.Row="3"
+                               Grid.Column="1"
+                               TextColor="#222222" />
+
+                        <!-- Created at -->
+                        <Label Text="Created at:"
+                               Grid.Row="4"
+                               Grid.Column="0"
+                               FontAttributes="Bold"
+                               TextColor="#555555" />
+                        <Label x:Name="CreatedAtLabel"
+                               Grid.Row="4"
+                               Grid.Column="1"
+                               TextColor="#222222" />
+
+                        <!-- Coordinates -->
+                        <Label Text="Location:"
+                               Grid.Row="5"
+                               Grid.Column="0"
+                               FontAttributes="Bold"
+                               TextColor="#555555" />
+                        <Label x:Name="CoordinatesLabel"
+                               Grid.Row="5"
+                               Grid.Column="1"
+                               TextColor="#222222" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Кнопка toggle -->
+            <Button Text="Change password"
+                    x:Name="TogglePasswordPanelButton"
+                    Clicked="OnTogglePasswordPanelClicked"
+                    Margin="0,10,0,0"
+                    HorizontalOptions="Center"
+                    BackgroundColor="#1976D2"
+                    TextColor="White"
+                    CornerRadius="20"
+                    Padding="16,8" />
+
+            <!-- Панель зміни пароля -->
+            <VerticalStackLayout x:Name="PasswordPanel"
+                                 IsVisible="False">
+
+                <Border
+                    Padding="16"
+                    StrokeThickness="1"
+                    Stroke="#E0E0E0"
+                    BackgroundColor="White"
+                    StrokeShape="RoundRectangle 16">
+
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Change password"
+                               FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="#333333" />
+
+                        <Entry x:Name="CurrentPasswordEntry"
+                               Placeholder="Current password"
+                               IsPassword="True"
+                               TextColor="Black" />
+
+                        <Entry x:Name="NewPasswordEntry"
+                               Placeholder="New password"
+                               IsPassword="True"
+                               TextColor="Black" />
+
+                        <Entry x:Name="ConfirmPasswordEntry"
+                               Placeholder="Confirm new password"
+                               IsPassword="True"
+                               TextColor="Black" />
+
+                        <Button x:Name="ChangePasswordButton"
+                                Text="Update password"
+                                Clicked="OnChangePasswordClicked"
+                                BackgroundColor="#388E3C"
+                                TextColor="White"
+                                CornerRadius="20"
+                                Padding="16,8" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

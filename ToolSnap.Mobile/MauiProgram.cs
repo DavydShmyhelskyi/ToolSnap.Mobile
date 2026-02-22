@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ToolSnap.Mobile.Pages;
 using ToolSnap.Mobile.Services;
 
 namespace ToolSnap.Mobile
@@ -25,7 +26,7 @@ namespace ToolSnap.Mobile
                     BaseAddress = new Uri("https://10.0.2.2:7062/")
                 };
             });
-
+            builder.Services.AddTransient<ProfilePage1>();
 
             builder.Services.AddSingleton<UserSessionService>();
             builder.Services.AddSingleton<LocationService>();

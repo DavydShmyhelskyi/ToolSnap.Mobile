@@ -2,63 +2,98 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.ConfirmOnReturnToolAsignmentPage"
-             Title="Confirm Return">
+             Title="Confirm Return"
+             BackgroundColor="#F5F5F5">
 
-    <Grid RowDefinitions="*,Auto" Padding="15">
+    <ContentPage.Content>
 
-        <CollectionView x:Name="ItemsCollectionView"
-                        ItemsSource="{Binding Items}"
-                        Grid.Row="0">
+        <Grid RowDefinitions="*,Auto"
+              Padding="15">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="12"
-                           Margin="0,0,0,12"
-                           BorderColor="#ccc"
-                           CornerRadius="10">
+            <CollectionView x:Name="ItemsCollectionView"
+                            ItemsSource="{Binding Items}"
+                            Grid.Row="0">
 
-                        <VerticalStackLayout Spacing="8">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
 
-                            <Label Text="Tool Type" FontAttributes="Bold" />
-                            <Picker ItemsSource="{Binding ToolTypes}"
-                                    ItemDisplayBinding="{Binding Title}"
-                                    SelectedItem="{Binding SelectedToolType}" />
+                        <Frame Padding="12"
+                               Margin="0,0,0,12"
+                               BorderColor="#CCCCCC"
+                               CornerRadius="10"
+                               BackgroundColor="White">
 
-                            <Label Text="Brand" FontAttributes="Bold" />
-                            <Picker ItemsSource="{Binding Brands}"
-                                    ItemDisplayBinding="{Binding Title}"
-                                    SelectedItem="{Binding SelectedBrand}" />
+                            <VerticalStackLayout Spacing="8">
 
-                            <Label Text="Model" FontAttributes="Bold" />
-                            <Picker ItemsSource="{Binding Models}"
-                                    ItemDisplayBinding="{Binding Title}"
-                                    SelectedItem="{Binding SelectedModel}" />
+                                <!-- TOOL TYPE -->
+                                <Label Text="Tool Type"
+                                       FontAttributes="Bold"
+                                       TextColor="#333333" />
+                                <Picker ItemsSource="{Binding ToolTypes}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        SelectedItem="{Binding SelectedToolType}"
+                                        Title="Select tool type" />
 
-                            <Label Text="Tool" FontAttributes="Bold" />
-                            <Picker ItemsSource="{Binding Tools}"
-                                    ItemDisplayBinding="{Binding SerialNumber}"
-                                    SelectedItem="{Binding SelectedTool}" />
+                                <!-- BRAND -->
+                                <Label Text="Brand"
+                                       FontAttributes="Bold"
+                                       TextColor="#333333" />
+                                <Picker ItemsSource="{Binding Brands}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        SelectedItem="{Binding SelectedBrand}"
+                                        Title="Select brand" />
 
-                            <Label Text="Serial Number" FontAttributes="Bold" />
-                            <Entry Text="{Binding SerialNumber}"
-                                   Placeholder="Enter serial number" />
+                                <!-- MODEL -->
+                                <Label Text="Model"
+                                       FontAttributes="Bold"
+                                       TextColor="#333333" />
+                                <Picker ItemsSource="{Binding Models}"
+                                        ItemDisplayBinding="{Binding Title}"
+                                        SelectedItem="{Binding SelectedModel}"
+                                        Title="Select model" />
 
-                            <Label Text="{Binding Confidence, StringFormat='Confidence: {0:F2}'}"
-                                   FontSize="12"
-                                   TextColor="Gray" />
+                                <!-- TOOL -->
+                                <Label Text="Tool"
+                                       FontAttributes="Bold"
+                                       TextColor="#333333" />
+                                <Picker ItemsSource="{Binding Tools}"
+                                        ItemDisplayBinding="{Binding SerialNumber}"
+                                        SelectedItem="{Binding SelectedTool}"
+                                        Title="Select tool" />
 
-                        </VerticalStackLayout>
+                                <!-- SERIAL NUMBER -->
+                                <Label Text="Serial Number"
+                                       FontAttributes="Bold"
+                                       TextColor="#333333" />
+                                <Entry Text="{Binding SerialNumber}"
+                                       Placeholder="Enter serial number" />
 
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                                <!-- CONFIDENCE -->
+                                <Label Text="{Binding Confidence, StringFormat='Confidence: {0:F2}'}"
+                                       FontSize="12"
+                                       TextColor="Gray" />
 
-        </CollectionView>
+                            </VerticalStackLayout>
 
-        <Button Text="Confirm Return"
-                Grid.Row="1"
-                Margin="0,10,0,0"
-                Clicked="OnConfirmClicked" />
+                        </Frame>
 
-    </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <Button Text="Confirm Return"
+                    Grid.Row="1"
+                    Margin="0,10,0,0"
+                    Padding="12"
+                    FontSize="18"
+                    BackgroundColor="#F57C00"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Clicked="OnConfirmClicked" />
+
+        </Grid>
+
+    </ContentPage.Content>
+
 </ContentPage>
