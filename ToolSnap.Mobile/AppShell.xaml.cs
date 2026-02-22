@@ -14,6 +14,7 @@ namespace ToolSnap.Mobile
             Routing.RegisterRoute("profile1", typeof(ProfilePage1));
             Routing.RegisterRoute(nameof(ReturnPage), typeof(ReturnPage));
             Routing.RegisterRoute(nameof(ConfirmOnReturnToolAsignmentPage), typeof(ConfirmOnReturnToolAsignmentPage));
+            Routing.RegisterRoute(nameof(MapPage), typeof(MapPage));
         }
     }
 }

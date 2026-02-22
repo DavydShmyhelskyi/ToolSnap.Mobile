@@ -28,6 +28,7 @@ namespace ToolSnap.Mobile
             });
             builder.Services.AddTransient<ProfilePage1>();
 
+            builder.Services.AddTransient<FindToolsForMapService>();
             builder.Services.AddSingleton<UserSessionService>();
             builder.Services.AddSingleton<LocationService>();
             builder.Services.AddSingleton<ToolTakeService>();
