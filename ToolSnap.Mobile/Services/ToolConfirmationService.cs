@@ -92,12 +92,12 @@ public class ToolConfirmationService
 
 
     public async Task<List<ToolDto>> SearchToolsAsync(
-        Guid toolTypeId,
-        Guid? brandId,
-        Guid? modelId,
-        CancellationToken cancellationToken = default)
+    Guid toolTypeId,
+    Guid? brandId,
+    Guid? modelId,
+    CancellationToken cancellationToken = default)
     {
-        var sb = new StringBuilder("tools/search?toolTypeId=");
+        var sb = new StringBuilder("tools/search-available?toolTypeId=");
         sb.Append(toolTypeId.ToString());
 
         if (brandId.HasValue)
@@ -118,7 +118,7 @@ public class ToolConfirmationService
 
         if (!response.IsSuccessStatusCode)
         {
-            // Не кидаємо — нехай сторінка покаже помилку
+            // Можеш тут хоча б залогувати text, щоб бачити причину
             return new List<ToolDto>();
         }
 
@@ -342,7 +342,7 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
         var locationId = location.Id;
 
         // 🔥 DEBUG – перед пошуком assignment-ів
-        await Application.Current.MainPage.DisplayAlert(
+        await Application.Current.MainPage.DisplayAlertAsync(
             "DEBUG ConfirmReturn",
             $"DetectedTools: {detectedTools.Count}\nItems: {items.Count}\nLocationId: {locationId}",
             "OK");
@@ -383,7 +383,7 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
             }
 
             // 🔥 DEBUG assignment
-            await Application.Current.MainPage.DisplayAlert(
+            await Application.Current.MainPage.DisplayAlertAsync(
                 "DEBUG ASSIGNMENT",
                 $"Item index: {i}\n" +
                 $"Selected ToolId: {toolId}\n\n" +

@@ -22,7 +22,7 @@ namespace ToolSnap.Mobile
             {
                 return new HttpClient(handler)
                 {
-                    BaseAddress = new Uri("https://localhost:7062/")
+                    BaseAddress = new Uri("https://10.0.2.2:7062/")
                 };
             });
 

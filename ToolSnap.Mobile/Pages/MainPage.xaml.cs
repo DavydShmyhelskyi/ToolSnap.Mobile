@@ -26,7 +26,7 @@ public partial class MainPage : ContentPage
 
         if (_session.IsLoggedIn)
         {
-            await Shell.Current.GoToAsync("//home");
+          //  await Shell.Current.GoToAsync("//home");
         }
     }
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -39,17 +39,35 @@ public partial class MainPage : ContentPage
 
             try
             {
-                var loc = await Geolocation.GetLocationAsync(new GeolocationRequest(GeolocationAccuracy.Medium));
+                var loc = await Geolocation.GetLocationAsync(
+                    new GeolocationRequest(GeolocationAccuracy.Medium));
 
                 if (loc != null)
                 {
                     longitude = loc.Longitude;
                     latitude = loc.Latitude;
+
+                    // 🔥 СПОВІЩЕННЯ ПРО ОТРИМАНІ КООРДИНАТИ
+                    await DisplayAlertAsync(
+                        "GPS координації",
+                        $"Latitude: {latitude}\nLongitude: {longitude}",
+                        "OK"
+                    );
+                }
+                else
+                {
+                    await DisplayAlertAsync(
+                        "GPS",
+                        "Не вдалося отримати дані геолокації",
+                        "OK");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Глушимо — сервер прийме 0,0
+                await DisplayAlertAsync(
+                    "GPS Error",
+                    $"Не вдалося отримати координати.\n{ex.Message}",
+                    "OK");
             }
 
             // 🔥 DTO повністю відповідає контролеру
@@ -73,7 +91,6 @@ public partial class MainPage : ContentPage
                 return;
             }
 
-            // 🔥 Твій UserDto — ідеально підходить під відповідь сервера
             var user = JsonSerializer.Deserialize<UserDto>(
                 responseText,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -84,7 +101,6 @@ public partial class MainPage : ContentPage
                 return;
             }
 
-            // 🔥 Зберігаємо користувача
             _session.SetUser(user);
 
             await DisplayAlertAsync("Success", $"Welcome {user.FullName}", "OK");

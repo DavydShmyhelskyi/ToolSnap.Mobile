@@ -7,7 +7,13 @@
         Padding="30"
         Spacing="25"
         VerticalOptions="Center">
-
+        
+        <Button
+            Text="MapPage"
+            HeightRequest="60"
+            FontSize="20"
+            Clicked="OnMapClicked" />
+        
         <Button
             Text="Take"
             HeightRequest="60"

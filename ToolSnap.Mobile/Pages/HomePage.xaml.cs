@@ -18,4 +18,8 @@ public partial class HomePage : ContentPage
         await DisplayAlertAsync("Return", "Navigate to Return Page", "OK");
         await Shell.Current.GoToAsync(nameof(ReturnPage));
     }
+    private async void OnMapClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(MapPage));
+    }
 }
