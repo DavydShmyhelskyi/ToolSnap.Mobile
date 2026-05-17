@@ -149,7 +149,7 @@ public class FindToolsForMapService
     }
 
     /// <summary>
-    /// /tools/search-any?toolTypeId=...&brandId=...
+    /// /tools/search-any?toolTypeId=...&amp;brandId=...
     /// </summary>
     private async Task<List<ToolDto>> SearchAnyToolsAsync(
         Guid? toolTypeId,
@@ -187,7 +187,7 @@ public class FindToolsForMapService
     }
 
     /// <summary>
-    /// /tools/search-available?toolTypeId=...&brandId=...
+    /// /tools/search-available?toolTypeId=...&amp;brandId=...
     /// (як у твоєму ToolConfirmationService)
     /// </summary>
     private async Task<List<ToolDto>> SearchAvailableToolsAsync(
@@ -216,7 +216,7 @@ public class FindToolsForMapService
     }
 
     /// <summary>
-    /// /tools/not-returned/user/{userId}/search?toolTypeId=...&brandId=...
+    /// /tools/not-returned/user/{userId}/search?toolTypeId=...&amp;brandId=...
     /// Повністю запрацює, коли ми почнемо передавати currentUserId з MapPage.
     /// </summary>
     private async Task<List<ToolDto>> SearchNotReturnedToolsForUserAsync(

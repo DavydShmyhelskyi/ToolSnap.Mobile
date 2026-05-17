@@ -36,6 +36,12 @@ namespace ToolSnap.Mobile
             builder.Services.AddSingleton<DetectedToolsService>();
             builder.Services.AddSingleton<ToolConfirmationService>();
             builder.Services.AddSingleton<TakeFlowStateService>();
+            builder.Services.AddSingleton<ToolTransferService>();
+            builder.Services.AddSingleton<TransferFlowStateService>();
+            builder.Services.AddSingleton<FcmTokenService>();
+
+            builder.Services.AddTransient<TransferPage>();
+            builder.Services.AddTransient<IncomingTransfersPage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

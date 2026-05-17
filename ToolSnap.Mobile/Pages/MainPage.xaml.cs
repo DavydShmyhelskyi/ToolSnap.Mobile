@@ -10,13 +10,15 @@ public partial class MainPage : ContentPage
 {
     private readonly HttpClient _httpClient;
     private readonly UserSessionService _session;
+    private readonly FcmTokenService _fcmTokenService;
 
-    public MainPage(HttpClient httpClient, UserSessionService session)
+    public MainPage(HttpClient httpClient, UserSessionService session, FcmTokenService fcmTokenService)
     {
         InitializeComponent();
 
         _httpClient = httpClient;
         _session = session;
+        _fcmTokenService = fcmTokenService;
 
         _session.LoadUser();
     }
@@ -102,6 +104,9 @@ public partial class MainPage : ContentPage
             }
 
             _session.SetUser(user);
+
+            // Fire-and-forget: registers stored FCM token so backend can send deadline reminders.
+            _ = _fcmTokenService.RegisterAsync(user.Id);
 
             await DisplayAlertAsync("Success", $"Welcome {user.FullName}", "OK");
 

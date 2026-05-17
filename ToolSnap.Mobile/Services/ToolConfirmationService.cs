@@ -220,7 +220,8 @@ public class ToolConfirmationService
                     ToolId: item.SelectedTool?.Id
                             ?? throw new InvalidOperationException("Tool must be selected"),
                     UserId: userId,
-                    LocationId: locationId
+                    LocationId: locationId,
+                    DueAt: item.HasDeadline ? item.DeadlineDate.ToUniversalTime() : null
                 ))
                 .ToList();
 
@@ -261,7 +262,7 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
     try
     {
         // 🔥 DEBUG – вхід у метод
-        await Application.Current.MainPage.DisplayAlertAsync(
+        await Application.Current.Windows[0].Page.DisplayAlertAsync(
             "DEBUG ConfirmReturn",
             $"userId: {userId}\nitems.Count: {items?.Count ?? 0}",
             "OK");
@@ -342,7 +343,7 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
         var locationId = location.Id;
 
         // 🔥 DEBUG – перед пошуком assignment-ів
-        await Application.Current.MainPage.DisplayAlertAsync(
+        await Application.Current.Windows[0].Page.DisplayAlertAsync(
             "DEBUG ConfirmReturn",
             $"DetectedTools: {detectedTools.Count}\nItems: {items.Count}\nLocationId: {locationId}",
             "OK");
@@ -383,7 +384,7 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
             }
 
             // 🔥 DEBUG assignment
-            await Application.Current.MainPage.DisplayAlertAsync(
+            await Application.Current.Windows[0].Page.DisplayAlertAsync(
                 "DEBUG ASSIGNMENT",
                 $"Item index: {i}\n" +
                 $"Selected ToolId: {toolId}\n\n" +

@@ -17,11 +17,12 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-                        <Frame Padding="12"
-                               Margin="0,0,0,12"
-                               BorderColor="#CCCCCC"
-                               CornerRadius="10"
-                               BackgroundColor="White">
+                        <Border Padding="12"
+                                Margin="0,0,0,12"
+                                Stroke="#CCCCCC"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                BackgroundColor="White">
 
                             <VerticalStackLayout Spacing="8">
 
@@ -73,9 +74,15 @@
                                        FontSize="12"
                                        TextColor="Gray" />
 
+                                <!-- PRICE -->
+                                <Label Text="{Binding PriceText, StringFormat='Price: {0}'}"
+                                       FontSize="12"
+                                       TextColor="#1565C0"
+                                       FontAttributes="Bold" />
+
                             </VerticalStackLayout>
 
-                        </Frame>
+                        </Border>
 
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

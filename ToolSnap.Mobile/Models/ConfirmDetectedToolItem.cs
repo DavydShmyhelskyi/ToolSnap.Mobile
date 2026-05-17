@@ -66,16 +66,33 @@ public class ConfirmDetectedToolItem : INotifyPropertyChanged
             if (SetField(ref _selectedTool, value))
             {
                 OnPropertyChanged(nameof(SelectedTool));
+                OnPropertyChanged(nameof(PriceText));
                 SerialNumber = value?.SerialNumber;
             }
         }
     }
+
+    public string PriceText => _selectedTool?.Price > 0 ? $"{_selectedTool.Price:F2} UAH" : "—";
 
     private string? _serialNumber;
     public string? SerialNumber
     {
         get => _serialNumber;
         set => SetField(ref _serialNumber, value);
+    }
+
+    private bool _hasDeadline;
+    public bool HasDeadline
+    {
+        get => _hasDeadline;
+        set => SetField(ref _hasDeadline, value);
+    }
+
+    private DateTime _deadlineDate = DateTime.Today.AddDays(1);
+    public DateTime DeadlineDate
+    {
+        get => _deadlineDate;
+        set => SetField(ref _deadlineDate, value);
     }
 
     public ConfirmDetectedToolItem(

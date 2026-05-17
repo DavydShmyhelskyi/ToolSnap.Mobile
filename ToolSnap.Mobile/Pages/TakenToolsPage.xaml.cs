@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.IO;
 using ToolSnap.Mobile.Dtos;
+using ToolSnap.Mobile.Models;
 using ToolSnap.Mobile.Services;
 
 namespace ToolSnap.Mobile.Pages;
@@ -10,17 +11,34 @@ public partial class TakenToolsPage : ContentPage
 {
     private readonly UserSessionService _session;
     private readonly HttpClient _httpClient;
+    private readonly TransferFlowStateService _transferState;
 
     public ObservableCollection<ToolItemViewModel> Tools { get; } = new();
 
-    private bool _isLoaded;
+    private string _totalLiabilityText = "—";
+    public string TotalLiabilityText
+    {
+        get => _totalLiabilityText;
+        private set { _totalLiabilityText = value; OnPropertyChanged(nameof(TotalLiabilityText)); }
+    }
 
-    public TakenToolsPage(UserSessionService session, HttpClient httpClient)
+    private string _toolCountText = "";
+    public string ToolCountText
+    {
+        get => _toolCountText;
+        private set { _toolCountText = value; OnPropertyChanged(nameof(ToolCountText)); }
+    }
+
+    public TakenToolsPage(
+        UserSessionService session,
+        HttpClient httpClient,
+        TransferFlowStateService transferState)
     {
         InitializeComponent();
 
         _session = session;
         _httpClient = httpClient;
+        _transferState = transferState;
 
         BindingContext = this;
     }
@@ -28,12 +46,6 @@ public partial class TakenToolsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // Щоб не вантажити кожен раз при поверненні на сторінку
-        //if (_isLoaded)
-         //   return;
-
-        _isLoaded = true;
         await LoadToolsAsync();
     }
 
@@ -46,6 +58,19 @@ public partial class TakenToolsPage : ContentPage
             {
                 await DisplayAlertAsync("Error", "Not authorised.", "OK");
                 return;
+            }
+
+            // 🔹 0. Завантажуємо статистику відповідальності
+            var valuationResponse = await _httpClient.GetAsync($"tool-valuations/worker/{user.Id}");
+            if (valuationResponse.IsSuccessStatusCode)
+            {
+                var stats = await valuationResponse.Content.ReadFromJsonAsync<WorkerOnHandsStatsDto>(
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (stats != null)
+                {
+                    TotalLiabilityText = $"{stats.TotalValue:F2} UAH";
+                    ToolCountText = $"{stats.ToolCount} tool{(stats.ToolCount == 1 ? "" : "s")}";
+                }
             }
 
             // 🔹 1. Завантажуємо всі типи інструментів
@@ -98,8 +123,6 @@ public partial class TakenToolsPage : ContentPage
 
                 try
                 {
-                    // GET /tool-photos/file?toolId={toolId}&photoTypeTitle=front
-                    // ⚠️ Переконайся, що в БД реально існує тип фото "front"
                     var resp = await _httpClient.GetAsync(
                         $"tool-photos/file?toolId={tool.Id}&photoTypeTitle=front");
 
@@ -117,12 +140,6 @@ public partial class TakenToolsPage : ContentPage
                                 () => new MemoryStream(dto.Content));
                         }
                     }
-                    else
-                    {
-                        // Якщо треба задебажити:
-                        // var txt = await resp.Content.ReadAsStringAsync();
-                        // await DisplayAlert("Photo error", $"{resp.StatusCode}\n{txt}", "OK");
-                    }
                 }
                 catch
                 {
@@ -132,12 +149,45 @@ public partial class TakenToolsPage : ContentPage
                 typeDict.TryGetValue(tool.ToolTypeId, out var typeTitle);
                 typeTitle ??= "Невідомий тип";
 
+                // Fetch the active assignment to get DueAt / IsOverdue
+                ToolAssignmentDto? assignment = null;
+                try
+                {
+                    var assignResp = await _httpClient.GetAsync(
+                        $"tool-assignments/user/{user.Id}/tool/{tool.Id}/search-active");
+                    if (assignResp.IsSuccessStatusCode)
+                    {
+                        assignment = await assignResp.Content.ReadFromJsonAsync<ToolAssignmentDto>(
+                            new System.Text.Json.JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
+                    }
+                }
+                catch
+                {
+                    // Non-fatal — tool displays without deadline info
+                }
+
+                var capturedTool = tool;
+                var capturedPhoto = photo;
+                var capturedTypeTitle = typeTitle;
+
                 Tools.Add(new ToolItemViewModel
                 {
-                    Id = tool.Id,
-                    SerialNumber = tool.SerialNumber,
-                    Photo = photo,
-                    ToolTypeTitle = typeTitle
+                    Id = capturedTool.Id,
+                    SerialNumber = capturedTool.SerialNumber,
+                    Photo = capturedPhoto,
+                    ToolTypeTitle = capturedTypeTitle,
+                    Price = capturedTool.Price,
+                    DueAt = assignment?.DueAt,
+                    IsOverdue = assignment?.IsOverdue ?? false,
+                    TransferCommand = new Command(async () =>
+                        await OnTransferToolAsync(
+                            capturedTool.Id,
+                            capturedTypeTitle,
+                            capturedTool.SerialNumber,
+                            capturedPhoto))
                 });
             }
         }
@@ -146,12 +196,21 @@ public partial class TakenToolsPage : ContentPage
             await DisplayAlertAsync("Error", ex.ToString(), "OK");
         }
     }
-}
 
-public class ToolItemViewModel
-{
-    public Guid Id { get; init; }
-    public string? SerialNumber { get; init; }
-    public ImageSource? Photo { get; init; }
-    public string ToolTypeTitle { get; init; } = "";
+    private async Task OnTransferToolAsync(
+        Guid toolId,
+        string typeTitle,
+        string? serialNumber,
+        ImageSource? photo)
+    {
+        _transferState.SelectedTool = new ToolItemViewModel
+        {
+            Id = toolId,
+            ToolTypeTitle = typeTitle,
+            SerialNumber = serialNumber,
+            Photo = photo
+        };
+
+        await Shell.Current.GoToAsync(nameof(TransferPage));
+    }
 }

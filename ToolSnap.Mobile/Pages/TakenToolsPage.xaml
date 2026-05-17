@@ -6,7 +6,7 @@
              BackgroundColor="#F5F5F5">
 
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,*"
+        <Grid RowDefinitions="Auto,Auto,*"
               Padding="16">
 
             <!-- Заголовок всередині сторінки -->
@@ -17,8 +17,34 @@
                    TextColor="#222222"
                    Margin="0,0,0,8" />
 
+            <!-- Liability summary card -->
+            <Border Grid.Row="1"
+                    Margin="0,0,0,12"
+                    Padding="14,10"
+                    BackgroundColor="#E3F2FD"
+                    Stroke="#90CAF9"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 10">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Total liability"
+                               FontSize="12"
+                               TextColor="#555555" />
+                        <Label Text="{Binding TotalLiabilityText}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#1565C0" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="1"
+                           Text="{Binding ToolCountText}"
+                           FontSize="13"
+                           TextColor="#777777"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
             <!-- Список інструментів -->
-            <CollectionView Grid.Row="1"
+            <CollectionView Grid.Row="2"
                             x:Name="ToolsCollectionView"
                             ItemsSource="{Binding Tools}"
                             SelectionMode="None">
@@ -27,8 +53,8 @@
                         <!-- Окрема картка -->
                         <Border Margin="0,4"
                                 Padding="10"
-                                BackgroundColor="White"
-                                Stroke="#E0E0E0"
+                                BackgroundColor="{Binding CardColor}"
+                                Stroke="{Binding CardStroke}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 12">
 
@@ -52,6 +78,19 @@
                                                      Spacing="4"
                                                      VerticalOptions="Center">
 
+                                    <!-- Status chip (overdue / due soon) -->
+                                    <Border IsVisible="{Binding HasStatus}"
+                                            BackgroundColor="{Binding StatusLabelColor}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 6"
+                                            Padding="6,2"
+                                            HorizontalOptions="Start">
+                                        <Label Text="{Binding StatusLabel}"
+                                               TextColor="White"
+                                               FontSize="10"
+                                               FontAttributes="Bold" />
+                                    </Border>
+
                                     <!-- Тип інструменту -->
                                     <Label Text="{Binding ToolTypeTitle}"
                                            FontAttributes="Bold"
@@ -62,6 +101,29 @@
                                     <Label Text="{Binding SerialNumber}"
                                            FontSize="14"
                                            TextColor="#777777" />
+
+                                    <!-- Ціна -->
+                                    <Label Text="{Binding PriceText}"
+                                           FontSize="13"
+                                           TextColor="#1565C0"
+                                           FontAttributes="Bold" />
+
+                                    <!-- Дедлайн -->
+                                    <Label IsVisible="{Binding HasDeadline}"
+                                           Text="{Binding DueAtText, StringFormat='Due: {0}'}"
+                                           FontSize="12"
+                                           TextColor="#555555" />
+
+                                    <Button Text="Transfer"
+                                            BackgroundColor="#7B1FA2"
+                                            TextColor="White"
+                                            CornerRadius="8"
+                                            FontSize="13"
+                                            HeightRequest="34"
+                                            Padding="12,0"
+                                            HorizontalOptions="Start"
+                                            Command="{Binding TransferCommand}"
+                                            Margin="0,4,0,0" />
 
                                 </VerticalStackLayout>
                             </Grid>
