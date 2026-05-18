@@ -2,55 +2,51 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.TakenToolsPage"
-             Title="Taken Tools"
-             BackgroundColor="#F5F5F5">
+             Title="Taken Tools">
 
     <ContentPage.Content>
-        <Grid RowDefinitions="Auto,Auto,*"
-              Padding="16">
+        <Grid RowDefinitions="Auto,Auto,*" Padding="16">
 
-            <!-- Заголовок всередині сторінки -->
             <Label Grid.Row="0"
                    Text="Taken tools"
                    FontSize="24"
                    FontAttributes="Bold"
-                   TextColor="#222222"
+                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}"
                    Margin="0,0,0,8" />
 
             <!-- Liability summary card -->
             <Border Grid.Row="1"
                     Margin="0,0,0,12"
                     Padding="14,10"
-                    BackgroundColor="#E3F2FD"
-                    Stroke="#90CAF9"
                     StrokeThickness="1"
-                    StrokeShape="RoundRectangle 10">
+                    StrokeShape="RoundRectangle 10"
+                    BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#1A2A3A}"
+                    Stroke="{AppThemeBinding Light=#90CAF9, Dark=#1E4A7A}">
                 <Grid ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Spacing="2">
                         <Label Text="Total liability"
                                FontSize="12"
-                               TextColor="#555555" />
+                               TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
                         <Label Text="{Binding TotalLiabilityText}"
                                FontSize="20"
                                FontAttributes="Bold"
-                               TextColor="#1565C0" />
+                               TextColor="{AppThemeBinding Light=#1565C0, Dark=#64B5F6}" />
                     </VerticalStackLayout>
                     <Label Grid.Column="1"
                            Text="{Binding ToolCountText}"
                            FontSize="13"
-                           TextColor="#777777"
+                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
                            VerticalOptions="Center" />
                 </Grid>
             </Border>
 
-            <!-- Список інструментів -->
+            <!-- Tool list -->
             <CollectionView Grid.Row="2"
                             x:Name="ToolsCollectionView"
                             ItemsSource="{Binding Tools}"
                             SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <!-- Окрема картка -->
                         <Border Margin="0,4"
                                 Padding="10"
                                 BackgroundColor="{Binding CardColor}"
@@ -58,27 +54,23 @@
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 12">
 
-                            <Grid ColumnDefinitions="Auto,*"
-                                  ColumnSpacing="12">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
 
-                                <!-- Фото -->
+                                <!-- Photo thumbnail -->
                                 <Border WidthRequest="70"
                                         HeightRequest="70"
                                         Padding="0"
                                         StrokeThickness="0"
-                                        BackgroundColor="#EEEEEE"
-                                        StrokeShape="RoundRectangle 8">
-
-                                    <Image Source="{Binding Photo}"
-                                           Aspect="AspectFill" />
+                                        StrokeShape="RoundRectangle 8"
+                                        BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#3A3A3C}">
+                                    <Image Source="{Binding Photo}" Aspect="AspectFill" />
                                 </Border>
 
-                                <!-- Інфа про інструмент -->
                                 <VerticalStackLayout Grid.Column="1"
                                                      Spacing="4"
                                                      VerticalOptions="Center">
 
-                                    <!-- Status chip (overdue / due soon) -->
+                                    <!-- Status chip -->
                                     <Border IsVisible="{Binding HasStatus}"
                                             BackgroundColor="{Binding StatusLabelColor}"
                                             StrokeThickness="0"
@@ -91,28 +83,24 @@
                                                FontAttributes="Bold" />
                                     </Border>
 
-                                    <!-- Тип інструменту -->
                                     <Label Text="{Binding ToolTypeTitle}"
                                            FontAttributes="Bold"
                                            FontSize="16"
-                                           TextColor="#222222" />
+                                           TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
 
-                                    <!-- Серійний номер -->
                                     <Label Text="{Binding SerialNumber}"
                                            FontSize="14"
-                                           TextColor="#777777" />
+                                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
 
-                                    <!-- Ціна -->
                                     <Label Text="{Binding PriceText}"
                                            FontSize="13"
-                                           TextColor="#1565C0"
-                                           FontAttributes="Bold" />
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#1565C0, Dark=#64B5F6}" />
 
-                                    <!-- Дедлайн -->
                                     <Label IsVisible="{Binding HasDeadline}"
                                            Text="{Binding DueAtText, StringFormat='Due: {0}'}"
                                            FontSize="12"
-                                           TextColor="#555555" />
+                                           TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
 
                                     <Button Text="Transfer"
                                             BackgroundColor="#7B1FA2"

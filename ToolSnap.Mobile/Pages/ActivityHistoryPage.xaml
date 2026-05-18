@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.Pages.ActivityHistoryPage"
+             Title="Activity History">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Button Grid.Row="0"
+                Text="Refresh"
+                Margin="16,12"
+                HorizontalOptions="End"
+                Clicked="OnRefreshClicked" />
+
+        <RefreshView Grid.Row="1"
+                     x:Name="PageRefreshView"
+                     Refreshing="OnRefreshing">
+
+            <CollectionView x:Name="HistoryList" Margin="12,0">
+
+                <CollectionView.EmptyView>
+                    <Label Text="No activity found."
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Margin="0,40"
+                           TextColor="{AppThemeBinding Light=Gray, Dark=#888888}"
+                           FontSize="16" />
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,6"
+                                Padding="14,12"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 10"
+                                BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#2C2C2E}">
+                            <Grid ColumnDefinitions="6,*,Auto" ColumnSpacing="12">
+
+                                <!-- Coloured left accent bar -->
+                                <BoxView Grid.Column="0"
+                                         WidthRequest="6"
+                                         CornerRadius="3"
+                                         Color="{Binding OperationColor}"
+                                         VerticalOptions="Fill" />
+
+                                <!-- Main content -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="3">
+
+                                    <Label Text="{Binding OperationLabel}"
+                                           FontAttributes="Bold"
+                                           FontSize="15"
+                                           TextColor="{Binding OperationColor}" />
+
+                                    <Label Text="{Binding ToolDisplay}"
+                                           FontSize="14"
+                                           TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                                    <Label Text="{Binding Timestamp}"
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
+
+                                </VerticalStackLayout>
+
+                                <!-- Status badge (transfers only) -->
+                                <Border Grid.Column="2"
+                                        IsVisible="{Binding HasStatus}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="8,4"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+                                    <Label Text="{Binding StatusBadge}"
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light=#555555, Dark=#CCCCCC}" />
+                                </Border>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </RefreshView>
+
+    </Grid>
+
+</ContentPage>

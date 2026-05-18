@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.TransferPage"
-             Title="Transfer Tool"
-             BackgroundColor="#F5F5F5">
+             Title="Transfer Tool">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="16">
@@ -11,21 +10,21 @@
             <Label Text="Transfer Tool"
                    FontSize="24"
                    FontAttributes="Bold"
-                   TextColor="#222222" />
+                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
 
             <!-- Selected tool card -->
             <Border Padding="14"
-                    BackgroundColor="White"
-                    Stroke="#E0E0E0"
                     StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12">
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
 
                     <Border WidthRequest="64"
                             HeightRequest="64"
                             StrokeThickness="0"
-                            BackgroundColor="#EEEEEE"
-                            StrokeShape="RoundRectangle 8">
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#3A3A3C}">
                         <Image x:Name="ToolPhoto" Aspect="AspectFill" />
                     </Border>
 
@@ -35,10 +34,10 @@
                         <Label x:Name="ToolTypeLabel"
                                FontAttributes="Bold"
                                FontSize="16"
-                               TextColor="#222222" />
+                               TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
                         <Label x:Name="ToolSerialLabel"
                                FontSize="14"
-                               TextColor="#777777" />
+                               TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
                     </VerticalStackLayout>
 
                 </Grid>
@@ -48,26 +47,25 @@
             <Label Text="Select recipient"
                    FontSize="15"
                    FontAttributes="Bold"
-                   TextColor="#333333" />
+                   TextColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}" />
 
             <Border Padding="4"
-                    BackgroundColor="White"
-                    Stroke="#E0E0E0"
                     StrokeThickness="1"
-                    StrokeShape="RoundRectangle 10">
+                    StrokeShape="RoundRectangle 10"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
                 <Picker x:Name="RecipientPicker"
                         Title="Choose a user..."
                         ItemsSource="{Binding Users}"
                         ItemDisplayBinding="{Binding FullName}"
-                        SelectedIndexChanged="OnRecipientSelected"
-                        TextColor="Black" />
+                        SelectedIndexChanged="OnRecipientSelected" />
             </Border>
 
             <!-- Optional photo section -->
             <Label Text="Optional photo"
                    FontSize="15"
                    FontAttributes="Bold"
-                   TextColor="#333333" />
+                   TextColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}" />
 
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                 <Button Text="Camera"
@@ -90,7 +88,7 @@
                     HeightRequest="180"
                     StrokeThickness="0"
                     StrokeShape="RoundRectangle 10"
-                    BackgroundColor="#EEEEEE">
+                    BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#3A3A3C}">
                 <Image x:Name="PhotoPreview" Aspect="AspectFit" />
             </Border>
 

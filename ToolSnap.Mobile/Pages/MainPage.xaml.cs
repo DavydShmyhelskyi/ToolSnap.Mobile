@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Maui.Devices.Sensors;
 using ToolSnap.Mobile.Dtos;
@@ -11,85 +11,133 @@ public partial class MainPage : ContentPage
     private readonly HttpClient _httpClient;
     private readonly UserSessionService _session;
     private readonly FcmTokenService _fcmTokenService;
+    private readonly BiometricService _bioService;
 
-    public MainPage(HttpClient httpClient, UserSessionService session, FcmTokenService fcmTokenService)
+    public MainPage(
+        HttpClient httpClient,
+        UserSessionService session,
+        FcmTokenService fcmTokenService,
+        BiometricService bioService)
     {
         InitializeComponent();
 
         _httpClient = httpClient;
         _session = session;
         _fcmTokenService = fcmTokenService;
+        _bioService = bioService;
 
         _session.LoadUser();
     }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        if (_session.IsLoggedIn)
+        if (_bioService.IsEnabled)
         {
-          //  await Shell.Current.GoToAsync("//home");
+            if (await _bioService.IsAvailableAsync())
+            {
+                BiometricSection.IsVisible = true;
+                await TryBiometricLoginAsync();
+            }
+            else
+            {
+                _bioService.Disable();
+                BiometricSection.IsVisible = false;
+            }
+        }
+        else
+        {
+            BiometricSection.IsVisible = false;
         }
     }
+
+    private async void OnBiometricClicked(object sender, EventArgs e)
+    {
+        await TryBiometricLoginAsync();
+    }
+
+    private async Task TryBiometricLoginAsync()
+    {
+        var authenticated = await _bioService.AuthenticateAsync();
+        if (!authenticated)
+            return;
+
+        var (email, password) = await _bioService.GetCredentialsAsync();
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        {
+            _bioService.Disable();
+            BiometricSection.IsVisible = false;
+            await DisplayAlertAsync("Biometrics", "Stored credentials not found. Please sign in with your password.", "OK");
+            return;
+        }
+
+        await PerformLoginAsync(email, password, 0, 0, isBiometric: true);
+    }
+
     private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        var email = EmailEntry.Text?.Trim();
+        var password = PasswordEntry.Text;
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        {
+            await DisplayAlertAsync("Validation", "Email and password are required.", "OK");
+            return;
+        }
+
+        double longitude = 0;
+        double latitude = 0;
+
+        try
+        {
+            var loc = await Geolocation.GetLocationAsync(
+                new GeolocationRequest(GeolocationAccuracy.Medium));
+
+            if (loc != null)
+            {
+                longitude = loc.Longitude;
+                latitude = loc.Latitude;
+
+                await DisplayAlertAsync(
+                    "GPS координації",
+                    $"Latitude: {latitude}\nLongitude: {longitude}",
+                    "OK");
+            }
+            else
+            {
+                await DisplayAlertAsync("GPS", "Не вдалося отримати дані геолокації", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("GPS Error", $"Не вдалося отримати координати.\n{ex.Message}", "OK");
+        }
+
+        await PerformLoginAsync(email, password, longitude, latitude, isBiometric: false);
+    }
+
+    private async Task PerformLoginAsync(string email, string password, double longitude, double latitude, bool isBiometric)
     {
         try
         {
-            // 🔥 Геолокація (необовʼязково, але контролер її очікує)
-            double longitude = 0;
-            double latitude = 0;
-
-            try
-            {
-                var loc = await Geolocation.GetLocationAsync(
-                    new GeolocationRequest(GeolocationAccuracy.Medium));
-
-                if (loc != null)
-                {
-                    longitude = loc.Longitude;
-                    latitude = loc.Latitude;
-
-                    // 🔥 СПОВІЩЕННЯ ПРО ОТРИМАНІ КООРДИНАТИ
-                    await DisplayAlertAsync(
-                        "GPS координації",
-                        $"Latitude: {latitude}\nLongitude: {longitude}",
-                        "OK"
-                    );
-                }
-                else
-                {
-                    await DisplayAlertAsync(
-                        "GPS",
-                        "Не вдалося отримати дані геолокації",
-                        "OK");
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlertAsync(
-                    "GPS Error",
-                    $"Не вдалося отримати координати.\n{ex.Message}",
-                    "OK");
-            }
-
-            // 🔥 DTO повністю відповідає контролеру
-            var loginRequest = new LoginDto(
-                EmailEntry.Text.Trim(),
-                PasswordEntry.Text,
-                longitude,
-                latitude
-            );
-
+            var loginRequest = new LoginDto(email, password, longitude, latitude);
             var response = await _httpClient.PostAsJsonAsync("users/login", loginRequest);
             var responseText = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                await DisplayAlertAsync(
-                    "Login Failed",
-                    $"{response.StatusCode}\n{responseText}",
-                    "OK"
-                );
+                if (isBiometric)
+                {
+                    _bioService.Disable();
+                    BiometricSection.IsVisible = false;
+                    await DisplayAlertAsync("Login Failed", "Biometric sign-in failed. Please sign in with your password.", "OK");
+                }
+                else
+                {
+                    await DisplayAlertAsync("Login Failed", $"{response.StatusCode}\n{responseText}", "OK");
+                }
                 return;
             }
 
@@ -104,11 +152,22 @@ public partial class MainPage : ContentPage
             }
 
             _session.SetUser(user);
-
-            // Fire-and-forget: registers stored FCM token so backend can send deadline reminders.
             _ = _fcmTokenService.RegisterAsync(user.Id);
 
-            await DisplayAlertAsync("Success", $"Welcome {user.FullName}", "OK");
+            if (!isBiometric && !_bioService.IsEnabled && await _bioService.IsAvailableAsync())
+            {
+                var enable = await DisplayAlertAsync(
+                    "Enable Biometrics",
+                    "Would you like to sign in with fingerprint or Face ID next time?",
+                    "Enable",
+                    "Not now");
+
+                if (enable)
+                    await _bioService.EnableAsync(email, password);
+            }
+
+            if (!isBiometric)
+                await DisplayAlertAsync("Success", $"Welcome {user.FullName}", "OK");
 
             await Shell.Current.GoToAsync("//home");
         }

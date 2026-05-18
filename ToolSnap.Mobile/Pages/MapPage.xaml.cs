@@ -1,257 +1,208 @@
-using Microsoft.Maui.Controls;
-using System;
-using System.Linq;
+using System.Globalization;
 using System.Text.Json;
-using System.Threading.Tasks;
 using ToolSnap.Mobile.Dtos;
 using ToolSnap.Mobile.Services;
 
-namespace ToolSnap.Mobile.Pages
-{
-    public partial class MapPage : ContentPage
-    {
-        private readonly UserSessionService _session;
-        private readonly FindToolsForMapService _mapService;
+namespace ToolSnap.Mobile.Pages;
 
-        // 🔧 Опції для серіалізації маркерів у camelCase
-        private static readonly JsonSerializerOptions MarkerJsonOptions = new()
+public partial class MapPage : ContentPage
+{
+    private readonly UserSessionService _session;
+    private readonly FindToolsForMapService _mapService;
+
+    private static readonly JsonSerializerOptions _jsonOpts = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+    private Guid? _selectedToolTypeId;
+    private Guid? _selectedBrandId;
+    private ToolAvailabilityFilter _availability = ToolAvailabilityFilter.All;
+    private string _search = "";
+
+    private List<MapMarkerDto> _resultMarkers = [];
+    private int _resultIndex;
+
+    public MapPage(UserSessionService session, FindToolsForMapService mapService)
+    {
+        InitializeComponent();
+        _session = session;
+        _mapService = mapService;
+
+        ToolTypePicker.SelectedIndexChanged += (_, _) =>
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            _selectedToolTypeId = ToolTypePicker.SelectedItem is ToolTypeDto t ? t.Id : null;
+            _ = LoadMapAsync();
         };
 
-        // Фільтри
-        private Guid? _selectedToolTypeId = null;
-        private Guid? _selectedBrandId = null;
-        // private Guid? _selectedModelId = null; // 🔸 більше не використовуємо
-        private ToolAvailabilityFilter _availability = ToolAvailabilityFilter.All;
-        private string _search = "";
-
-        public MapPage(UserSessionService session, FindToolsForMapService mapService)
+        BrandPicker.SelectedIndexChanged += (_, _) =>
         {
-            InitializeComponent();
-            _session = session;
-            _mapService = mapService;
+            _selectedBrandId = BrandPicker.SelectedItem is BrandDto b ? b.Id : null;
+            _ = LoadMapAsync();
+        };
 
-            // Підписка на події
-            ToolTypePicker.SelectedIndexChanged += ToolTypePicker_SelectedIndexChanged;
-            BrandPicker.SelectedIndexChanged += BrandPicker_SelectedIndexChanged;
-            // ModelPicker.SelectedIndexChanged += ModelPicker_SelectedIndexChanged; // 🔸 прибрали з XAML
-            AvailabilityPicker.SelectedIndexChanged += AvailabilityPicker_SelectedIndexChanged;
-            SearchBar.TextChanged += SearchBar_TextChanged;
-
-            // Стартове завантаження
-            _ = InitializeFiltersAndLoadMapAsync();
-        }
-
-        // ========================================================
-        // INITIAL LOAD (FILL PICKERS + LOAD MAP)
-        // ========================================================
-        private async Task InitializeFiltersAndLoadMapAsync()
+        AvailabilityPicker.SelectedIndexChanged += (_, _) =>
         {
-            try
+            _availability = AvailabilityPicker.SelectedItem switch
             {
-                // Завантажуємо фільтри
-                var toolTypes = await _mapService.GetToolTypesAsync();
-                var brands = await _mapService.GetBrandsAsync();
-                // var models    = await _mapService.GetModelsAsync(); // 🔸 модель не фільтруємо
+                "Available"     => ToolAvailabilityFilter.Available,
+                "Not available" => ToolAvailabilityFilter.NotAvailable,
+                _               => ToolAvailabilityFilter.All
+            };
+            _ = LoadMapAsync();
+        };
 
-                ToolTypePicker.ItemsSource = toolTypes;
-                ToolTypePicker.ItemDisplayBinding = new Binding("Title");
+        _ = InitAsync();
+    }
 
-                BrandPicker.ItemsSource = brands;
-                BrandPicker.ItemDisplayBinding = new Binding("Title");
+    private async Task InitAsync()
+    {
+        try
+        {
+            var typesTask  = _mapService.GetToolTypesAsync();
+            var brandsTask = _mapService.GetBrandsAsync();
+            await Task.WhenAll(typesTask, brandsTask);
 
-                // ModelPicker.ItemsSource = models;                     // 🔸 немає в XAML
-                // ModelPicker.ItemDisplayBinding = new Binding("Title"); // 🔸 немає в XAML
+            ToolTypePicker.ItemsSource         = typesTask.Result;
+            ToolTypePicker.ItemDisplayBinding  = new Binding("Title");
+            BrandPicker.ItemsSource            = brandsTask.Result;
+            BrandPicker.ItemDisplayBinding     = new Binding("Title");
 
-                // AvailabilityPicker (у XAML вже заданий)
-
-                await LoadMapAsync();
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
+            await LoadMapAsync();
         }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Error", ex.Message, "OK");
+        }
+    }
 
-        // ========================================================
-        // LOAD MAP WITH FILTERS
-        // ========================================================
-        private async Task LoadMapAsync()
+    private async Task LoadMapAsync()
+    {
+        try
         {
             var markers = await _mapService.LoadMarkersAsync(
-                _availability,
-                _selectedToolTypeId,
-                _selectedBrandId,
-                null // без моделі
-            );
+                _availability, _selectedToolTypeId, _selectedBrandId, null);
 
-            // 🔥 Пошук за текстом
             if (!string.IsNullOrWhiteSpace(_search))
             {
                 markers = markers
-                    .Where(m => m.Title.Contains(_search, StringComparison.OrdinalIgnoreCase)
-                             || m.Subtitle.Contains(_search, StringComparison.OrdinalIgnoreCase))
+                    .Where(m =>
+                        m.Title.Contains(_search, StringComparison.OrdinalIgnoreCase) ||
+                        m.Subtitle.Contains(_search, StringComparison.OrdinalIgnoreCase))
                     .ToList();
             }
 
-            // --------------------------
-            // 🔔 СПОВІЩЕННЯ ДЛЯ КОРИСТУВАЧА
-            // --------------------------
-            int toolsCount = markers.Count(m => m.Kind == MapMarkerKind.Tool);
+            double userLat = _session.CurrentUser?.Latitude  ?? 50.4501;
+            double userLon = _session.CurrentUser?.Longitude ?? 30.5234;
 
-            string msg = $"Знайдено інструментів: {toolsCount}";
+            _resultMarkers = [.. markers.OrderBy(m => Dist(userLat, userLon, m.Latitude, m.Longitude))];
+            _resultIndex   = 0;
 
-            if (_selectedToolTypeId == null && _selectedBrandId == null)
-                msg += "\n(No filters: ToolType = null, Brand = null)";
+            double centerLat = _resultMarkers.Count > 0 ? _resultMarkers[0].Latitude  : userLat;
+            double centerLon = _resultMarkers.Count > 0 ? _resultMarkers[0].Longitude : userLon;
 
-            if (_selectedToolTypeId == null)
-                msg += "\n⚠️ ToolType не вибрано";
+            string markersJson = JsonSerializer.Serialize(_resultMarkers, _jsonOpts);
+            MapWebView.Source  = new HtmlWebViewSource
+            {
+                Html = BuildHtml(centerLat, centerLon, markersJson, _resultMarkers.Count > 0)
+            };
 
-            if (_selectedBrandId == null)
-                msg += "\n⚠️ Brand не вибрано";
-
-            await DisplayAlertAsync("Search Result", msg, "OK");
-
-            // --------------------------
-            // 🔥 ПОБУДОВА КАРТИ
-            // --------------------------
-
-            // ✅ Серіалізуємо маркери у camelCase, щоб у JS були поля kind/latitude/longitude/title/subtitle
-            string markersJson = JsonSerializer.Serialize(markers, MarkerJsonOptions);
-
-            double lat = _session.CurrentUser?.Latitude ?? 50.4501;
-            double lon = _session.CurrentUser?.Longitude ?? 30.5234;
-
-            string html = BuildHtml(lat, lon, markersJson);
-
-            MapWebView.Source = new HtmlWebViewSource { Html = html };
+            UpdateNavigationUI();
         }
-
-        // ========================================================
-        // HTML BUILDER (MAP + MARKERS)
-        // ========================================================
-        private string BuildHtml(double lat, double lon, string markersJson)
+        catch (Exception ex)
         {
-            string safeLat = lat.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            string safeLon = lon.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            await DisplayAlertAsync("Error", ex.Message, "OK");
+        }
+    }
 
-            return $@"
-<!DOCTYPE html>
+    private void OnSearchPressed(object sender, EventArgs e)
+    {
+        _search = SearchBar.Text?.Trim() ?? "";
+        _ = LoadMapAsync();
+    }
+
+    private void OnClearSearch(object sender, EventArgs e)
+    {
+        SearchBar.Text = "";
+        _search        = "";
+        _ = LoadMapAsync();
+    }
+
+    private async void OnNextClicked(object sender, EventArgs e)
+    {
+        if (_resultMarkers.Count < 2) return;
+        _resultIndex = (_resultIndex + 1) % _resultMarkers.Count;
+        await MapWebView.EvaluateJavaScriptAsync($"moveToIndex({_resultIndex})");
+        UpdateNavigationUI();
+    }
+
+    private void UpdateNavigationUI()
+    {
+        int count = _resultMarkers.Count;
+        NextButton.IsVisible = count > 1;
+        ResultLabel.Text = count switch
+        {
+            0 => "No results",
+            1 => "1 result",
+            _ => $"{count} results  ({_resultIndex + 1}/{count})"
+        };
+    }
+
+    private static double Dist(double lat1, double lon1, double lat2, double lon2) =>
+        (lat1 - lat2) * (lat1 - lat2) + (lon1 - lon2) * (lon1 - lon2);
+
+    private static string BuildHtml(double lat, double lon, string markersJson, bool hasResults)
+    {
+        string sLat = lat.ToString(CultureInfo.InvariantCulture);
+        string sLon = lon.ToString(CultureInfo.InvariantCulture);
+
+        return $@"<!DOCTYPE html>
 <html>
 <head>
-<meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0'>
+<meta name='viewport' content='initial-scale=1.0,maximum-scale=1.0'>
 <style>
-    html, body {{ height: 100%; margin: 0; padding: 0; }}
-    #map {{ height: 100%; width: 100%; }}
+  html,body{{height:100%;margin:0;padding:0;}}
+  #map{{height:100%;width:100%;}}
 </style>
-
 <link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.3/dist/leaflet.css'/>
 <script src='https://unpkg.com/leaflet@1.9.3/dist/leaflet.js'></script>
-
 </head>
 <body>
-
 <div id='map'></div>
-
 <script>
+var map = L.map('map').setView([{sLat},{sLon}],13);
 
-var map = L.map('map').setView([{safeLat}, {safeLon}], 14);
-
-L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-    attribution: '© OpenStreetMap contributors'
+L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png',{{
+    attribution:'© OpenStreetMap contributors'
 }}).addTo(map);
 
-var markers = {markersJson};
+var data = {markersJson};
+var lms  = [];
 
-markers.forEach(m => {{
-    var icon = L.icon({{
-        iconUrl: getIcon(m.kind),
-        iconSize: [30, 30]
-    }});
-
-    L.marker([m.latitude, m.longitude], {{ icon: icon }})
-        .addTo(map)
-        .bindPopup(`<b>${{m.title}}</b><br/>${{m.subtitle}}`);
+data.forEach(function(m) {{
+    var lm = L.marker([m.latitude, m.longitude], {{
+        icon: L.icon({{ iconUrl: iconFor(m.kind), iconSize: [30,30] }})
+    }})
+    .addTo(map)
+    .bindPopup('<b>' + m.title + '</b><br/>' + m.subtitle);
+    lms.push(lm);
 }});
 
-function getIcon(kind) {{
-    if (kind === 0) return 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; // User
-    if (kind === 1) return 'https://cdn-icons-png.flaticon.com/512/684/684908.png'; // Location
-    return 'https://cdn-icons-png.flaticon.com/512/891/891448.png'; // Tool
+function iconFor(k) {{
+    if (k === 0) return 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+    if (k === 1) return 'https://cdn-icons-png.flaticon.com/512/684/684908.png';
+    return 'https://cdn-icons-png.flaticon.com/512/891/891448.png';
 }}
 
-</script>
+function moveToIndex(i) {{
+    if (i < 0 || i >= data.length) return;
+    map.setView([data[i].latitude, data[i].longitude], 16);
+    lms[i].openPopup();
+}}
 
+{(hasResults ? "moveToIndex(0);" : "")}
+</script>
 </body>
 </html>";
-        }
-
-        // ========================================================
-        // UI EVENTS AND FILTER LOGIC
-        // ========================================================
-
-        private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            _search = e.NewTextValue ?? "";
-            _ = LoadMapAsync();
-        }
-
-        private void OnClearSearch(object sender, EventArgs e)
-        {
-            SearchBar.Text = "";
-            _search = "";
-            _ = LoadMapAsync();
-        }
-
-        private void OnRefreshClicked(object sender, EventArgs e)
-        {
-            _ = LoadMapAsync();
-        }
-
-        private void ToolTypePicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ToolTypePicker.SelectedItem is ToolTypeDto item)
-                _selectedToolTypeId = item.Id;
-            else
-                _selectedToolTypeId = null;
-
-            _ = LoadMapAsync();
-        }
-
-        private void BrandPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (BrandPicker.SelectedItem is BrandDto item)
-                _selectedBrandId = item.Id;
-            else
-                _selectedBrandId = null;
-
-            _ = LoadMapAsync();
-        }
-
-        // private void ModelPicker_SelectedIndexChanged(object sender, EventArgs e)
-        // {
-        //     if (ModelPicker.SelectedItem is ModelDto item)
-        //         _selectedModelId = item.Id;
-        //     else
-        //         _selectedModelId = null;
-        //
-        //     _ = LoadMapAsync();
-        // }
-
-        private void AvailabilityPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (AvailabilityPicker.SelectedItem is string text)
-            {
-                _availability = text switch
-                {
-                    "Available" => ToolAvailabilityFilter.Available,
-                    "NotAvailable" => ToolAvailabilityFilter.NotAvailable,
-                    _ => ToolAvailabilityFilter.All
-                };
-            }
-
-            _ = LoadMapAsync();
-        }
     }
 }

@@ -2,25 +2,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.ReturnPage"
-             Title="Return a Tool"
-             BackgroundColor="#F5F5F5">
+             Title="Return a Tool">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Preview -->
             <Border HeightRequest="250"
-                    Stroke="#DDDDDD"
                     StrokeThickness="1"
-                    BackgroundColor="White"
-                    StrokeShape="RoundRectangle 12">
-                <Image x:Name="PreviewImage"
-                       Aspect="AspectFill" />
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#3A3A3C}">
+                <Image x:Name="PreviewImage" Aspect="AspectFill" />
             </Border>
 
             <!-- Camera / Gallery Buttons -->
-            <Grid ColumnDefinitions="*,*"
-                  ColumnSpacing="15">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
 
                 <Button Text="Camera"
                         HeightRequest="55"
@@ -38,17 +35,24 @@
                         Clicked="OnGalleryClicked" />
             </Grid>
 
+            <!-- Loader -->
+            <ActivityIndicator x:Name="ReturnLoader"
+                               IsRunning="False"
+                               IsVisible="False"
+                               HeightRequest="40"
+                               WidthRequest="40"
+                               HorizontalOptions="Center" />
+
             <!-- Return Button -->
-            <Button
-                Text="Return"
-                x:Name="ReturnButton"
-                IsEnabled="False"
-                Clicked="OnReturnClicked"
-                HeightRequest="60"
-                CornerRadius="12"
-                BackgroundColor="#F57C00"
-                TextColor="White"
-                FontSize="20" />
+            <Button Text="Return"
+                    x:Name="ReturnButton"
+                    IsEnabled="False"
+                    Clicked="OnReturnClicked"
+                    HeightRequest="60"
+                    CornerRadius="12"
+                    BackgroundColor="#F57C00"
+                    TextColor="White"
+                    FontSize="20" />
 
         </VerticalStackLayout>
     </ScrollView>

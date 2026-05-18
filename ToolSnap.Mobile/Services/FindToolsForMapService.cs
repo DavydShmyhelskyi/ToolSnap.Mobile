@@ -320,8 +320,9 @@ public class FindToolsForMapService
             var subtitleParts = new List<string>();
             if (!string.IsNullOrWhiteSpace(modelTitle))
                 subtitleParts.Add(modelTitle);
-            subtitleParts.Add($"SN: {t.SerialNumber ?? "-"}");
-            subtitleParts.Add($"Kind: {MapMarkerKind.Tool}");
+            subtitleParts.Add($"S/N: {t.SerialNumber ?? "—"}");
+            if (t.Price > 0)
+                subtitleParts.Add($"€{t.Price:F0}");
 
             var subtitle = string.Join(" • ", subtitleParts);
 

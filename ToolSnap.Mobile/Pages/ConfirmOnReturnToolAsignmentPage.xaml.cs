@@ -129,21 +129,10 @@ public partial class ConfirmOnReturnToolAsignmentPage : ContentPage
 
             item.SetTools(tools);
 
-            // якщо знайдено рівно один тул – логічно відразу вибрати його
             if (tools.Count == 1)
             {
                 item.SelectedTool = tools[0];
             }
-
-            // DEBUG – щоб ти бачив, що тепер дійсно щось приходить
-            await DisplayAlertAsync(
-                "DEBUG TOOLS (RETURN)",
-                $"User: {userId}\n" +
-                $"Type: {item.SelectedToolType?.Title}\n" +
-                $"Brand: {item.SelectedBrand?.Title ?? "-"}\n" +
-                $"Model: {item.SelectedModel?.Title ?? "-"}\n\n" +
-                $"Loaded not-returned tools: {tools.Count}",
-                "OK");
         }
         catch (Exception ex)
         {

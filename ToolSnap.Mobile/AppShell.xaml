@@ -37,6 +37,7 @@
 
     <ShellContent
         Title=""
+        Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
@@ -71,6 +72,14 @@
         <ShellContent
             Title="Transfers"
             ContentTemplate="{DataTemplate pages:IncomingTransfersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem
+        Title="Activity History"
+        Route="activity">
+        <ShellContent
+            Title="Activity History"
+            ContentTemplate="{DataTemplate pages:ActivityHistoryPage}" />
     </FlyoutItem>
 
 </Shell>

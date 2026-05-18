@@ -41,4 +41,28 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Semantic light/dark pairs — use inside AppThemeBinding in Styles.xaml -->
+    <Color x:Key="PageBg">#F5F5F5</Color>
+    <Color x:Key="PageBgDark">#1F1F1F</Color>
+
+    <Color x:Key="CardBg">White</Color>
+    <Color x:Key="CardBgDark">#2C2C2E</Color>
+    <Color x:Key="CardBorder">#E0E0E0</Color>
+    <Color x:Key="CardBorderDark">#3A3A3C</Color>
+
+    <Color x:Key="TextPrimary">#222222</Color>
+    <Color x:Key="TextPrimaryDark">#F0F0F0</Color>
+    <Color x:Key="TextSecondary">#555555</Color>
+    <Color x:Key="TextSecondaryDark">#AAAAAA</Color>
+    <Color x:Key="TextMuted">#777777</Color>
+    <Color x:Key="TextMutedDark">#888888</Color>
+
+    <Color x:Key="PhotoBg">#EEEEEE</Color>
+    <Color x:Key="PhotoBgDark">#3A3A3C</Color>
+    <Color x:Key="DividerColor">#DDDDDD</Color>
+    <Color x:Key="DividerColorDark">#3A3A3C</Color>
+
+    <Color x:Key="AccentBlue">#1565C0</Color>
+    <Color x:Key="AccentBlueDark">#64B5F6</Color>
 </ResourceDictionary>

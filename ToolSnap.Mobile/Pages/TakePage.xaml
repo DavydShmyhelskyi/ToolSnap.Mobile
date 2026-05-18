@@ -3,25 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.TakePage"
              x:Name="TakePageRoot"
-             Title="Take a Tool"
-             BackgroundColor="#F5F5F5">
+             Title="Take a Tool">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Preview -->
             <Border HeightRequest="250"
-                    Stroke="#DDDDDD"
                     StrokeThickness="1"
-                    BackgroundColor="White"
-                    StrokeShape="RoundRectangle 12">
-                <Image x:Name="PreviewImage"
-                       Aspect="AspectFill" />
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#3A3A3C}">
+                <Image x:Name="PreviewImage" Aspect="AspectFill" />
             </Border>
 
             <!-- Camera / Gallery Buttons -->
-            <Grid ColumnDefinitions="*,*"
-                  ColumnSpacing="15">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
 
                 <Button Text="Camera"
                         HeightRequest="55"
@@ -48,16 +45,15 @@
                 HorizontalOptions="Center" />
 
             <!-- Take Button -->
-            <Button
-                Text="Take"
-                x:Name="TakeButton"
-                IsEnabled="False"
-                Clicked="OnTakeClicked"
-                HeightRequest="60"
-                CornerRadius="12"
-                BackgroundColor="#388E3C"
-                TextColor="White"
-                FontSize="20" />
+            <Button Text="Take"
+                    x:Name="TakeButton"
+                    IsEnabled="False"
+                    Clicked="OnTakeClicked"
+                    HeightRequest="60"
+                    CornerRadius="12"
+                    BackgroundColor="#388E3C"
+                    TextColor="White"
+                    FontSize="20" />
 
         </VerticalStackLayout>
     </ScrollView>

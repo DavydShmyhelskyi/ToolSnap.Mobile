@@ -27,17 +27,20 @@ public class ToolItemViewModel
     public bool HasStatus => IsOverdue || IsCloseToDue;
     public string StatusLabel => IsOverdue ? "OVERDUE" : "DUE SOON";
 
+    private static bool IsDark =>
+        Application.Current?.RequestedTheme == AppTheme.Dark;
+
     public Color CardColor => IsOverdue
-        ? Color.FromArgb("#FFEBEE")
+        ? Color.FromArgb(IsDark ? "#3B1A1A" : "#FFEBEE")
         : IsCloseToDue
-            ? Color.FromArgb("#FFF3E0")
-            : Colors.White;
+            ? Color.FromArgb(IsDark ? "#2D2218" : "#FFF3E0")
+            : Color.FromArgb(IsDark ? "#2C2C2E" : "#FFFFFF");
 
     public Brush CardStroke => IsOverdue
-        ? new SolidColorBrush(Color.FromArgb("#EF9A9A"))
+        ? new SolidColorBrush(Color.FromArgb(IsDark ? "#C62828" : "#EF9A9A"))
         : IsCloseToDue
-            ? new SolidColorBrush(Color.FromArgb("#FFCC80"))
-            : new SolidColorBrush(Color.FromArgb("#E0E0E0"));
+            ? new SolidColorBrush(Color.FromArgb(IsDark ? "#BF6005" : "#FFCC80"))
+            : new SolidColorBrush(Color.FromArgb(IsDark ? "#3A3A3C" : "#E0E0E0"));
 
     public Color StatusLabelColor => IsOverdue
         ? Color.FromArgb("#E53935")

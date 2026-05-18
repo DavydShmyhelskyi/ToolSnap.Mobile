@@ -93,10 +93,6 @@ public partial class TakePage : ContentPage
             IsLoading = true;
             TakeButton.IsEnabled = false;
 
-            await DisplayAlertAsync("Step 1",
-                $"Sending {_selectedPhotos.Count} photo(s) to API...",
-                "OK");
-
             var result = await _toolTakeService.TakeToolsAsync(_selectedPhotos);
 
             if (!result.Success)
@@ -115,53 +111,19 @@ public partial class TakePage : ContentPage
                 return;
             }
 
-            await DisplayAlertAsync("Step 2",
-                $"PhotoSession created:\nId: {result.Session.Id}\n" +
-                $"Lat: {result.Session.Latitude}, Lng: {result.Session.Longitude}",
-                "OK");
-
-            // 🔹 показуємо raw-відповідь від бекенду (де всередині є JSON від Gemini)
-            var raw = result.DetectionRawJson ?? "<null>";
-            var shortRaw = raw.Length > 400 ? raw[..400] + "..." : raw;
-
-            await DisplayAlertAsync("Gemini Raw",
-                shortRaw,
-                "OK");
-
             var detections = _parsingService.ParseDetections(result.DetectionRawJson);
-
-            await DisplayAlertAsync("Step 3",
-                $"Parsed detections: {detections.Count}",
-                "OK");
 
             if (detections.Count == 0)
             {
-                await DisplayAlertAsync("Gemini",
-                    "No tools detected.",
+                await DisplayAlertAsync("No tools detected",
+                    "No tools were recognised in the photos. Please try again.",
                     "OK");
                 return;
             }
 
-            // невеликий summary по кожному detection
-            var summary = string.Join("\n\n", detections.Select((d, i) =>
-                $"#{i + 1}\n" +
-                $"Type: {d.ToolType}\n" +
-                $"Brand: {d.Brand ?? "-"}\n" +
-                $"Model: {d.Model ?? "-"}\n" +
-                $"Confidence: {d.Confidence}\n" +
-                $"RedFlagged: {d.RedFlagged}"));
-
-            await DisplayAlertAsync("Gemini Parsed", summary, "OK");
-
-            // 🔹 ЗБЕРІГАЄМО СТАН ДЛЯ НАСТУПНОЇ СТОРІНКИ
             _takeFlowState.CurrentSession = result.Session;
             _takeFlowState.CurrentDetections = detections.ToList();
 
-            await DisplayAlertAsync("Step 4",
-                "Navigating to Confirm page...",
-                "OK");
-
-            // 🔹 ПЕРЕХІД БЕЗ ПАРАМЕТРІВ (стан уже в сервісі)
             await Shell.Current.GoToAsync(nameof(ConfirmOnTakeToolAsignmentPage));
 
             _selectedPhotos.Clear();

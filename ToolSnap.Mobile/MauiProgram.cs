@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plugin.Fingerprint;
 using ToolSnap.Mobile.Pages;
 using ToolSnap.Mobile.Services;
 
@@ -11,6 +12,7 @@ namespace ToolSnap.Mobile
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseFingerprint()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -39,9 +41,13 @@ namespace ToolSnap.Mobile
             builder.Services.AddSingleton<ToolTransferService>();
             builder.Services.AddSingleton<TransferFlowStateService>();
             builder.Services.AddSingleton<FcmTokenService>();
+            builder.Services.AddSingleton<BiometricService>();
+            builder.Services.AddSingleton<ActivityHistoryService>();
 
+            builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<TransferPage>();
             builder.Services.AddTransient<IncomingTransfersPage>();
+            builder.Services.AddTransient<ActivityHistoryPage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

@@ -147,7 +147,7 @@ public partial class TakenToolsPage : ContentPage
                 }
 
                 typeDict.TryGetValue(tool.ToolTypeId, out var typeTitle);
-                typeTitle ??= "Невідомий тип";
+                typeTitle ??= "Unknown type";
 
                 // Fetch the active assignment to get DueAt / IsOverdue
                 ToolAssignmentDto? assignment = null;

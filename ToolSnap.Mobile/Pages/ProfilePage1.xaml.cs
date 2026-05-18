@@ -85,6 +85,10 @@ public partial class ProfilePage1 : ContentPage
             return;
         }
 
+        ChangePasswordButton.IsEnabled = false;
+        PasswordChangeIndicator.IsVisible = true;
+        PasswordChangeIndicator.IsRunning = true;
+
         try
         {
             var body = new
@@ -122,6 +126,12 @@ public partial class ProfilePage1 : ContentPage
         catch (Exception ex)
         {
             await DisplayAlertAsync("Error", ex.Message, "OK");
+        }
+        finally
+        {
+            ChangePasswordButton.IsEnabled = true;
+            PasswordChangeIndicator.IsVisible = false;
+            PasswordChangeIndicator.IsRunning = false;
         }
     }
 }
