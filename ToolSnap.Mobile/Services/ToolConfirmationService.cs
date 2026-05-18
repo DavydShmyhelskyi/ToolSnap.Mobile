@@ -92,12 +92,12 @@ public class ToolConfirmationService
 
 
     public async Task<List<ToolDto>> SearchToolsAsync(
-        Guid toolTypeId,
-        Guid? brandId,
-        Guid? modelId,
-        CancellationToken cancellationToken = default)
+    Guid toolTypeId,
+    Guid? brandId,
+    Guid? modelId,
+    CancellationToken cancellationToken = default)
     {
-        var sb = new StringBuilder("tools/search?toolTypeId=");
+        var sb = new StringBuilder("tools/search-available?toolTypeId=");
         sb.Append(toolTypeId.ToString());
 
         if (brandId.HasValue)
@@ -118,7 +118,7 @@ public class ToolConfirmationService
 
         if (!response.IsSuccessStatusCode)
         {
-            // Не кидаємо — нехай сторінка покаже помилку
+            // Можеш тут хоча б залогувати text, щоб бачити причину
             return new List<ToolDto>();
         }
 
@@ -220,7 +220,8 @@ public class ToolConfirmationService
                     ToolId: item.SelectedTool?.Id
                             ?? throw new InvalidOperationException("Tool must be selected"),
                     UserId: userId,
-                    LocationId: locationId
+                    LocationId: locationId,
+                    DueAt: item.HasDeadline ? item.DeadlineDate.ToUniversalTime() : null
                 ))
                 .ToList();
 
@@ -260,12 +261,6 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
 {
     try
     {
-        // 🔥 DEBUG – вхід у метод
-        await Application.Current.MainPage.DisplayAlertAsync(
-            "DEBUG ConfirmReturn",
-            $"userId: {userId}\nitems.Count: {items?.Count ?? 0}",
-            "OK");
-
         if (items is null || items.Count == 0)
             return new ConfirmToolsResult(false, "No items to confirm.");
 
@@ -341,12 +336,6 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
 
         var locationId = location.Id;
 
-        // 🔥 DEBUG – перед пошуком assignment-ів
-        await Application.Current.MainPage.DisplayAlert(
-            "DEBUG ConfirmReturn",
-            $"DetectedTools: {detectedTools.Count}\nItems: {items.Count}\nLocationId: {locationId}",
-            "OK");
-
         // 3️⃣ Для кожного item – шукаємо активний assignment
         var batchItems = new List<ReturnToolAssignmentsBatchItemDto>();
 
@@ -381,22 +370,6 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
                     false,
                     $"Failed to parse ToolAssignmentDto for tool {toolId}.");
             }
-
-            // 🔥 DEBUG assignment
-            await Application.Current.MainPage.DisplayAlert(
-                "DEBUG ASSIGNMENT",
-                $"Item index: {i}\n" +
-                $"Selected ToolId: {toolId}\n\n" +
-                $"AssignmentId: {assignment.Id}\n" +
-                $"Assignment.ToolId: {assignment.ToolId}\n" +
-                $"UserId: {assignment.UserId}\n" +
-                $"TakenDetectedToolId: {assignment.TakenDetectedToolId}\n" +
-                $"ReturnedDetectedToolId: {assignment.ReturnedDetectedToolId}\n" +
-                $"TakenLocationId: {assignment.TakenLocationId}\n" +
-                $"ReturnedLocationId: {assignment.ReturnedLocationId}\n" +
-                $"TakenAt: {assignment.TakenAt}\n" +
-                $"ReturnedAt: {assignment.ReturnedAt}",
-                "OK");
 
             if (assignment.ReturnedAt.HasValue)
             {

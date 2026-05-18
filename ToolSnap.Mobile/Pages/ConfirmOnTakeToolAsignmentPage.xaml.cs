@@ -153,7 +153,7 @@ public partial class ConfirmOnTakeToolAsignmentPage : ContentPage
         }
     }
 
-    private async void OnConfirmClicked(object sender, EventArgs e)
+    private async void OnConfirmClicked(object? sender, EventArgs e)
     {
         if (PhotoSession is null)
             return;
@@ -181,12 +181,9 @@ public partial class ConfirmOnTakeToolAsignmentPage : ContentPage
                 return;
             }
 
-            await DisplayAlertAsync("Success",
-                "Tools assigned successfully.",
-                "OK");
-
             _takeFlowState.Clear();
             await Shell.Current.GoToAsync("..");
+            await AppToast.ShowSuccessAsync("Tools checked out successfully.");
         }
         catch (Exception ex)
         {

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
+using Plugin.Fingerprint;
+using ToolSnap.Mobile.Pages;
 using ToolSnap.Mobile.Services;
 
 namespace ToolSnap.Mobile
@@ -10,6 +13,7 @@ namespace ToolSnap.Mobile
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -25,10 +29,12 @@ namespace ToolSnap.Mobile
 
                 return new HttpClient(handler)
                 {
-                    BaseAddress = new Uri("https://localhost:7062/")
+                    BaseAddress = new Uri("https://10.0.2.2:7062/")
                 };
             });
+            builder.Services.AddTransient<ProfilePage1>();
 
+            builder.Services.AddTransient<FindToolsForMapService>();
             builder.Services.AddSingleton<UserSessionService>();
             builder.Services.AddSingleton<LocationService>();
             builder.Services.AddSingleton<ToolTakeService>();
@@ -36,6 +42,16 @@ namespace ToolSnap.Mobile
             builder.Services.AddSingleton<DetectedToolsService>();
             builder.Services.AddSingleton<ToolConfirmationService>();
             builder.Services.AddSingleton<TakeFlowStateService>();
+            builder.Services.AddSingleton<ToolTransferService>();
+            builder.Services.AddSingleton<TransferFlowStateService>();
+            builder.Services.AddSingleton<FcmTokenService>();
+            builder.Services.AddSingleton<BiometricService>();
+            builder.Services.AddSingleton<ActivityHistoryService>();
+
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<TransferPage>();
+            builder.Services.AddTransient<IncomingTransfersPage>();
+            builder.Services.AddTransient<ActivityHistoryPage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

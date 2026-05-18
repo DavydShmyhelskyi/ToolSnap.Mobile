@@ -7,11 +7,39 @@
     xmlns:pages="clr-namespace:ToolSnap.Mobile.Pages"
     Title="ToolSnap.Mobile">
 
+    <!-- Flyout header — blue brand bar with a red badge when transfers are pending -->
+    <Shell.FlyoutHeader>
+        <VerticalStackLayout x:Name="FlyoutHeaderLayout"
+                             BackgroundColor="#1565C0"
+                             Padding="20,28,20,18"
+                             Spacing="0">
+
+            <Label Text="ToolSnap"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="White" />
+
+            <Border IsVisible="{Binding HasPendingTransfers}"
+                    BackgroundColor="#E53935"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,5"
+                    Margin="0,10,0,0"
+                    HorizontalOptions="Start">
+                <Label Text="{Binding PendingTransfersBadgeText}"
+                       TextColor="White"
+                       FontSize="13"
+                       FontAttributes="Bold" />
+            </Border>
+
+        </VerticalStackLayout>
+    </Shell.FlyoutHeader>
+
     <ShellContent
         Title=""
+        Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-
 
     <FlyoutItem
         Title="Home"
@@ -25,8 +53,9 @@
         Title="Profile"
         Route="profile">
         <ShellContent
+            Route="profile1"
             Title="Profile"
-            ContentTemplate="{DataTemplate pages:ProfilePage}" />
+            ContentTemplate="{DataTemplate pages:ProfilePage1}" />
     </FlyoutItem>
 
     <FlyoutItem
@@ -35,6 +64,22 @@
         <ShellContent
             Title="Taken Tools"
             ContentTemplate="{DataTemplate pages:TakenToolsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem
+        Title="Transfers"
+        Route="transfers">
+        <ShellContent
+            Title="Transfers"
+            ContentTemplate="{DataTemplate pages:IncomingTransfersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem
+        Title="Activity History"
+        Route="activity">
+        <ShellContent
+            Title="Activity History"
+            ContentTemplate="{DataTemplate pages:ActivityHistoryPage}" />
     </FlyoutItem>
 
 </Shell>

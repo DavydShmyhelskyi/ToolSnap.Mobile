@@ -8,6 +8,7 @@ namespace ToolSnap.Mobile.Dtos
         Guid? ModelId,
         string? SerialNumber,
         Guid ToolStatusId,
+        decimal Price,
         DateTimeOffset CreatedAt);
     public record ToolPhotoFileDto(
         string FileName,

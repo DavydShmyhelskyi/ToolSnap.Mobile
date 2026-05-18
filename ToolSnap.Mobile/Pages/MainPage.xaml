@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.MainPage">
@@ -6,28 +6,40 @@
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20">
 
-            <Label 
-            Text="Login"
-            FontSize="28"
-            HorizontalOptions="Center" />
+            <!-- Biometric sign-in — hidden until OnAppearing determines it is available -->
+            <VerticalStackLayout x:Name="BiometricSection"
+                                 IsVisible="False"
+                                 Spacing="12">
 
-            <Entry
-            x:Name="EmailEntry"
-            Placeholder="Email"
-            Keyboard="Email" />
+                <Button Text="Sign in with Biometrics"
+                        Clicked="OnBiometricClicked"
+                        BackgroundColor="{AppThemeBinding Light=#1565C0, Dark=#1E88E5}"
+                        TextColor="White" />
 
-            <Entry
-            x:Name="PasswordEntry"
-            Placeholder="Password"
-            IsPassword="True" />
+                <Label Text="— or sign in with password —"
+                       HorizontalOptions="Center"
+                       TextColor="{AppThemeBinding Light=Gray, Dark=#999999}"
+                       FontSize="13" />
 
-            <Button
-            x:Name="LoginButton"
-            Text="Login"
-            Pressed="OnButtonPressed"
-            Released="OnButtonReleased"
-            Clicked="OnLoginClicked"/>
+            </VerticalStackLayout>
 
+            <Label Text="Login"
+                   FontSize="28"
+                   HorizontalOptions="Center" />
+
+            <Entry x:Name="EmailEntry"
+                   Placeholder="Email"
+                   Keyboard="Email" />
+
+            <Entry x:Name="PasswordEntry"
+                   Placeholder="Password"
+                   IsPassword="True" />
+
+            <Button x:Name="LoginButton"
+                    Text="Login"
+                    Pressed="OnButtonPressed"
+                    Released="OnButtonReleased"
+                    Clicked="OnLoginClicked" />
 
         </VerticalStackLayout>
     </ScrollView>

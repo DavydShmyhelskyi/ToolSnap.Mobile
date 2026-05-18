@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToolSnap.Mobile.Pages.ProfilePage1"
+             Title="Profile">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Profile"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+
+            <!-- User info card -->
+            <Border Padding="16"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="User info"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                    <BoxView Style="{StaticResource Divider}" />
+
+                    <Grid ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          ColumnSpacing="8"
+                          RowSpacing="6">
+
+                        <Label Text="Full name:"
+                               Grid.Row="0" Grid.Column="0"
+                               Style="{StaticResource FieldLabel}" />
+                        <Label x:Name="FullNameLabel"
+                               Grid.Row="0" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}" />
+
+                        <Label Text="Email:"
+                               Grid.Row="1" Grid.Column="0"
+                               Style="{StaticResource FieldLabel}" />
+                        <Label x:Name="EmailLabel"
+                               Grid.Row="1" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}" />
+
+                        <Label Text="Email confirmed:"
+                               Grid.Row="2" Grid.Column="0"
+                               Style="{StaticResource FieldLabel}" />
+                        <Label x:Name="ConfirmedEmailLabel"
+                               Grid.Row="2" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}" />
+
+                        <Label Text="Status:"
+                               Grid.Row="3" Grid.Column="0"
+                               Style="{StaticResource FieldLabel}" />
+                        <Label x:Name="IsActiveLabel"
+                               Grid.Row="3" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}" />
+
+                        <Label Text="Created at:"
+                               Grid.Row="4" Grid.Column="0"
+                               Style="{StaticResource FieldLabel}" />
+                        <Label x:Name="CreatedAtLabel"
+                               Grid.Row="4" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}" />
+
+                        <Label Text="Location:"
+                               Grid.Row="5" Grid.Column="0"
+                               Style="{StaticResource FieldLabel}" />
+                        <Label x:Name="CoordinatesLabel"
+                               Grid.Row="5" Grid.Column="1"
+                               Style="{StaticResource ValueLabel}" />
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Appearance card -->
+            <Border Padding="16"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Appearance"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                    <BoxView Style="{StaticResource Divider}" />
+
+                    <Label Text="Theme"
+                           Style="{StaticResource FieldLabel}" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+
+                        <Button x:Name="ThemeLightButton"
+                                Grid.Column="0"
+                                Text="Light"
+                                Clicked="OnThemeLightClicked"
+                                CornerRadius="12"
+                                Padding="0,8"
+                                BackgroundColor="{AppThemeBinding Light=#1976D2, Dark=#3A3A3C}"
+                                TextColor="White" />
+
+                        <Button x:Name="ThemeDarkButton"
+                                Grid.Column="1"
+                                Text="Dark"
+                                Clicked="OnThemeDarkClicked"
+                                CornerRadius="12"
+                                Padding="0,8"
+                                BackgroundColor="{AppThemeBinding Light=#3A3A3C, Dark=#1976D2}"
+                                TextColor="White" />
+
+                        <Button x:Name="ThemeSystemButton"
+                                Grid.Column="2"
+                                Text="System"
+                                Clicked="OnThemeSystemClicked"
+                                CornerRadius="12"
+                                Padding="0,8"
+                                BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}"
+                                TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="Change password"
+                    x:Name="TogglePasswordPanelButton"
+                    Clicked="OnTogglePasswordPanelClicked"
+                    Margin="0,10,0,0"
+                    HorizontalOptions="Center"
+                    BackgroundColor="#1976D2"
+                    TextColor="White"
+                    CornerRadius="20"
+                    Padding="16,8" />
+
+            <!-- Password change panel -->
+            <VerticalStackLayout x:Name="PasswordPanel" IsVisible="False">
+
+                <Border Padding="16"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 16"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                        Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Change password"
+                               FontAttributes="Bold"
+                               FontSize="18"
+                               TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                        <Entry x:Name="CurrentPasswordEntry"
+                               Placeholder="Current password"
+                               IsPassword="True" />
+
+                        <Entry x:Name="NewPasswordEntry"
+                               Placeholder="New password"
+                               IsPassword="True" />
+
+                        <Entry x:Name="ConfirmPasswordEntry"
+                               Placeholder="Confirm new password"
+                               IsPassword="True" />
+
+                        <Button x:Name="ChangePasswordButton"
+                                Text="Update password"
+                                Clicked="OnChangePasswordClicked"
+                                BackgroundColor="#388E3C"
+                                TextColor="White"
+                                CornerRadius="20"
+                                Padding="16,8" />
+
+                        <ActivityIndicator x:Name="PasswordChangeIndicator"
+                                           IsRunning="False"
+                                           IsVisible="False"
+                                           HorizontalOptions="Center" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -76,6 +76,11 @@ public partial class ReturnPage : ContentPage
             return;
         }
 
+        ReturnButton.IsEnabled = false;
+        ReturnLoader.IsVisible = true;
+        ReturnLoader.IsRunning = true;
+        bool navigated = false;
+
         try
         {
             var result = await _toolTakeService.ReturnToolsAsync(_selectedPhotos);
@@ -100,23 +105,30 @@ public partial class ReturnPage : ContentPage
 
             if (detections.Count == 0)
             {
-                await DisplayAlertAsync("Gemini", "No tools detected.", "OK");
+                await DisplayAlertAsync("No tools detected",
+                    "No tools were recognised in the photos. Please try again.",
+                    "OK");
                 return;
             }
 
-            // 🔹 Зберігаємо стан – той самий TakeFlowStateService
             _takeFlowState.CurrentSession = result.Session;
             _takeFlowState.CurrentDetections = detections.ToList();
 
             await Shell.Current.GoToAsync(nameof(ConfirmOnReturnToolAsignmentPage));
+            navigated = true;
 
             _selectedPhotos.Clear();
             PreviewImage.Source = null;
-            ReturnButton.IsEnabled = false;
         }
         catch (Exception ex)
         {
             await DisplayAlertAsync("Error", ex.Message, "OK");
+        }
+        finally
+        {
+            ReturnLoader.IsVisible = false;
+            ReturnLoader.IsRunning = false;
+            ReturnButton.IsEnabled = !navigated && _selectedPhotos.Any();
         }
     }
 }

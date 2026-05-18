@@ -2,23 +2,53 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.HomePage">
-    
-    <VerticalStackLayout
-        Padding="30"
-        Spacing="25"
-        VerticalOptions="Center">
 
-        <Button
-            Text="Take"
-            HeightRequest="60"
-            FontSize="20"
-            Clicked="OnTakeClicked" />
+    <ScrollView>
+        <VerticalStackLayout Padding="30"
+                             Spacing="25"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center">
 
-        <Button
-            Text="Return"
-            HeightRequest="60"
-            FontSize="20"
-            Clicked="OnReturnClicked" />
+            <Label Text="ToolSnap"
+                   FontAttributes="Bold"
+                   FontSize="30"
+                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}"
+                   HorizontalOptions="Center"
+                   Margin="0,10" />
 
-    </VerticalStackLayout>
+            <Label Text="Choose an action"
+                   FontSize="18"
+                   TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20" />
+
+            <Button Text="Open map"
+                    HeightRequest="60"
+                    WidthRequest="250"
+                    FontSize="20"
+                    CornerRadius="12"
+                    BackgroundColor="#1976D2"
+                    TextColor="White"
+                    Clicked="OnMapClicked" />
+
+            <Button Text="Take a tool"
+                    HeightRequest="60"
+                    WidthRequest="250"
+                    FontSize="20"
+                    CornerRadius="12"
+                    BackgroundColor="#388E3C"
+                    TextColor="White"
+                    Clicked="OnTakeClicked" />
+
+            <Button Text="Return a tool"
+                    HeightRequest="60"
+                    WidthRequest="250"
+                    FontSize="20"
+                    CornerRadius="12"
+                    BackgroundColor="#F57C00"
+                    TextColor="White"
+                    Clicked="OnReturnClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

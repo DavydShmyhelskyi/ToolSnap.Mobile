@@ -7,6 +7,13 @@ namespace ToolSnap.Mobile
         public App()
         {
             InitializeComponent();
+
+            UserAppTheme = Preferences.Get("app_theme", "system") switch
+            {
+                "dark"  => AppTheme.Dark,
+                "light" => AppTheme.Light,
+                _       => AppTheme.Unspecified
+            };
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
