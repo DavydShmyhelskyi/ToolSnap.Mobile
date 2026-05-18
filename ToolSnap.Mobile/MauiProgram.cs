@@ -19,7 +19,6 @@ namespace ToolSnap.Mobile
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-            builder.UseFingerprint();
             var handler = new HttpClientHandler();
             handler.ServerCertificateCustomValidationCallback = (msg, cert, chain, errors) => true;
 

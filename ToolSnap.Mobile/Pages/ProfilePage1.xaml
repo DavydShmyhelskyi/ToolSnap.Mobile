@@ -80,6 +80,59 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Appearance card -->
+            <Border Padding="16"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label Text="Appearance"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                    <BoxView Style="{StaticResource Divider}" />
+
+                    <Label Text="Theme"
+                           Style="{StaticResource FieldLabel}" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+
+                        <Button x:Name="ThemeLightButton"
+                                Grid.Column="0"
+                                Text="Light"
+                                Clicked="OnThemeLightClicked"
+                                CornerRadius="12"
+                                Padding="0,8"
+                                BackgroundColor="{AppThemeBinding Light=#1976D2, Dark=#3A3A3C}"
+                                TextColor="White" />
+
+                        <Button x:Name="ThemeDarkButton"
+                                Grid.Column="1"
+                                Text="Dark"
+                                Clicked="OnThemeDarkClicked"
+                                CornerRadius="12"
+                                Padding="0,8"
+                                BackgroundColor="{AppThemeBinding Light=#3A3A3C, Dark=#1976D2}"
+                                TextColor="White" />
+
+                        <Button x:Name="ThemeSystemButton"
+                                Grid.Column="2"
+                                Text="System"
+                                Clicked="OnThemeSystemClicked"
+                                CornerRadius="12"
+                                Padding="0,8"
+                                BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}"
+                                TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
             <Button Text="Change password"
                     x:Name="TogglePasswordPanelButton"
                     Clicked="OnTogglePasswordPanelClicked"

@@ -10,6 +10,10 @@ public partial class ProfilePage1 : ContentPage
     private readonly HttpClient _httpClient;
     private readonly UserSessionService _session;
 
+    private static readonly Color ActiveColor   = Color.FromArgb("#1976D2");
+    private static readonly Color InactiveLight = Color.FromArgb("#E0E0E0");
+    private static readonly Color InactiveDark  = Color.FromArgb("#3A3A3C");
+
     public ProfilePage1(HttpClient httpClient, UserSessionService session)
     {
         InitializeComponent();
@@ -21,6 +25,7 @@ public partial class ProfilePage1 : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        RefreshThemeButtons();
 
         var user = _session.CurrentUser;
 
@@ -48,6 +53,34 @@ public partial class ProfilePage1 : ContentPage
 
         TogglePasswordPanelButton.Text =
             PasswordPanel.IsVisible ? "Hide password form" : "Change password";
+    }
+
+    private void OnThemeLightClicked(object? sender, EventArgs e)  => ApplyTheme(AppTheme.Light,       "light");
+    private void OnThemeDarkClicked(object? sender, EventArgs e)   => ApplyTheme(AppTheme.Dark,        "dark");
+    private void OnThemeSystemClicked(object? sender, EventArgs e) => ApplyTheme(AppTheme.Unspecified, "system");
+
+    private void ApplyTheme(AppTheme theme, string key)
+    {
+        Application.Current!.UserAppTheme = theme;
+        Preferences.Set("app_theme", key);
+        RefreshThemeButtons();
+    }
+
+    private void RefreshThemeButtons()
+    {
+        var saved = Preferences.Get("app_theme", "system");
+        bool isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
+
+        Color inactive = isDark ? InactiveDark : InactiveLight;
+        Color inactiveText = isDark ? Color.FromArgb("#F0F0F0") : Color.FromArgb("#333333");
+
+        ThemeLightButton.BackgroundColor  = saved == "light"  ? ActiveColor : inactive;
+        ThemeDarkButton.BackgroundColor   = saved == "dark"   ? ActiveColor : inactive;
+        ThemeSystemButton.BackgroundColor = saved == "system" ? ActiveColor : inactive;
+
+        ThemeLightButton.TextColor  = saved == "light"  ? Colors.White : inactiveText;
+        ThemeDarkButton.TextColor   = saved == "dark"   ? Colors.White : inactiveText;
+        ThemeSystemButton.TextColor = saved == "system" ? Colors.White : inactiveText;
     }
 
     private async void OnChangePasswordClicked(object? sender, EventArgs e)

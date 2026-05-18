@@ -141,7 +141,7 @@ public partial class IncomingTransfersPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlertAsync("Error", ex.Message, "OK");
         }
     }
 
@@ -154,7 +154,7 @@ public partial class IncomingTransfersPage : ContentPage
 
         if (!result.Success)
         {
-            await DisplayAlert("Error", result.ErrorMessage ?? "Failed to accept.", "OK");
+            await DisplayAlertAsync("Error", result.ErrorMessage ?? "Failed to accept.", "OK");
             return;
         }
 
@@ -172,7 +172,7 @@ public partial class IncomingTransfersPage : ContentPage
 
         if (!result.Success)
         {
-            await DisplayAlert("Error", result.ErrorMessage ?? "Failed to reject.", "OK");
+            await DisplayAlertAsync("Error", result.ErrorMessage ?? "Failed to reject.", "OK");
             return;
         }
 
@@ -190,7 +190,7 @@ public partial class IncomingTransfersPage : ContentPage
 
         if (!result.Success)
         {
-            await DisplayAlert("Error", result.ErrorMessage ?? "Failed to cancel.", "OK");
+            await DisplayAlertAsync("Error", result.ErrorMessage ?? "Failed to cancel.", "OK");
             return;
         }
 
