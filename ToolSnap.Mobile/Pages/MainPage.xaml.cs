@@ -52,7 +52,7 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async void OnBiometricClicked(object sender, EventArgs e)
+    private async void OnBiometricClicked(object? sender, EventArgs e)
     {
         await TryBiometricLoginAsync();
     }
@@ -76,7 +76,7 @@ public partial class MainPage : ContentPage
         await PerformLoginAsync(email, password, 0, 0, isBiometric: true);
     }
 
-    private async void OnLoginClicked(object sender, EventArgs e)
+    private async void OnLoginClicked(object? sender, EventArgs e)
     {
         var email = EmailEntry.Text?.Trim();
         var password = PasswordEntry.Text;
@@ -172,12 +172,12 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async void OnButtonPressed(object sender, EventArgs e)
+    private async void OnButtonPressed(object? sender, EventArgs e)
     {
         await LoginButton.ScaleToAsync(0.9, 100);
     }
 
-    private async void OnButtonReleased(object sender, EventArgs e)
+    private async void OnButtonReleased(object? sender, EventArgs e)
     {
         await LoginButton.ScaleToAsync(1, 100);
     }

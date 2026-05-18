@@ -7,17 +7,17 @@ public partial class HomePage : ContentPage
         InitializeComponent();
     }
 
-    private async void OnTakeClicked(object sender, EventArgs e)
+    private async void OnTakeClicked(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(TakePage));
     }
 
-    private async void OnReturnClicked(object sender, EventArgs e)
+    private async void OnReturnClicked(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(ReturnPage));
     }
 
-    private async void OnMapClicked(object sender, EventArgs e)
+    private async void OnMapClicked(object? sender, EventArgs e)
     {
         try
         {

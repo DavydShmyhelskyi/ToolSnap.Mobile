@@ -42,7 +42,7 @@ public partial class ProfilePage1 : ContentPage
             CoordinatesLabel.Text = "Not set";
     }
 
-    private void OnTogglePasswordPanelClicked(object sender, EventArgs e)
+    private void OnTogglePasswordPanelClicked(object? sender, EventArgs e)
     {
         PasswordPanel.IsVisible = !PasswordPanel.IsVisible;
 
@@ -50,7 +50,7 @@ public partial class ProfilePage1 : ContentPage
             PasswordPanel.IsVisible ? "Hide password form" : "Change password";
     }
 
-    private async void OnChangePasswordClicked(object sender, EventArgs e)
+    private async void OnChangePasswordClicked(object? sender, EventArgs e)
     {
         var user = _session.CurrentUser;
 

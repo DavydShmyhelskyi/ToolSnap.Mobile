@@ -39,7 +39,7 @@ public partial class TransferPage : ContentPage
         var tool = _state.SelectedTool;
         if (tool == null)
         {
-            await DisplayAlert("Error", "No tool selected.", "OK");
+            await DisplayAlertAsync("Error", "No tool selected.", "OK");
             await Shell.Current.GoToAsync("..");
             return;
         }
@@ -66,7 +66,7 @@ public partial class TransferPage : ContentPage
 
             if (!response.IsSuccessStatusCode)
             {
-                await DisplayAlert("Error", $"Failed to load users: {text}", "OK");
+                await DisplayAlertAsync("Error", $"Failed to load users: {text}", "OK");
                 return;
             }
 
@@ -84,17 +84,17 @@ public partial class TransferPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", ex.Message, "OK");
+            await DisplayAlertAsync("Error", ex.Message, "OK");
         }
     }
 
-    private void OnRecipientSelected(object sender, EventArgs e)
+    private void OnRecipientSelected(object? sender, EventArgs e)
     {
         _selectedRecipient = RecipientPicker.SelectedItem as UserDto;
         ConfirmButton.IsEnabled = _selectedRecipient != null;
     }
 
-    private async void OnCameraClicked(object sender, EventArgs e)
+    private async void OnCameraClicked(object? sender, EventArgs e)
     {
         try
         {
@@ -108,7 +108,7 @@ public partial class TransferPage : ContentPage
         }
     }
 
-    private async void OnGalleryClicked(object sender, EventArgs e)
+    private async void OnGalleryClicked(object? sender, EventArgs e)
     {
         try
         {
@@ -132,7 +132,7 @@ public partial class TransferPage : ContentPage
         PhotoPreviewBorder.IsVisible = true;
     }
 
-    private async void OnConfirmClicked(object sender, EventArgs e)
+    private async void OnConfirmClicked(object? sender, EventArgs e)
     {
         var tool = _state.SelectedTool;
         var recipient = _selectedRecipient;
@@ -148,7 +148,7 @@ public partial class TransferPage : ContentPage
         if (!result.Success)
         {
             ConfirmButton.IsEnabled = true;
-            await DisplayAlert("Error", result.ErrorMessage ?? "Transfer failed.", "OK");
+            await DisplayAlertAsync("Error", result.ErrorMessage ?? "Transfer failed.", "OK");
             return;
         }
 

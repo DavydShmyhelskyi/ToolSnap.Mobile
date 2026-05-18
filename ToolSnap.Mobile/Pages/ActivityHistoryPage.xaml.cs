@@ -18,9 +18,9 @@ public partial class ActivityHistoryPage : ContentPage
         await LoadAsync();
     }
 
-    private async void OnRefreshClicked(object sender, EventArgs e) => await LoadAsync();
+    private async void OnRefreshClicked(object? sender, EventArgs e) => await LoadAsync();
 
-    private async void OnRefreshing(object sender, EventArgs e)
+    private async void OnRefreshing(object? sender, EventArgs e)
     {
         await LoadAsync();
         PageRefreshView.IsRefreshing = false;

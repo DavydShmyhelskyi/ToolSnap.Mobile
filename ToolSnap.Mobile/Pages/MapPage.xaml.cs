@@ -115,20 +115,20 @@ public partial class MapPage : ContentPage
         }
     }
 
-    private void OnSearchPressed(object sender, EventArgs e)
+    private void OnSearchPressed(object? sender, EventArgs e)
     {
         _search = SearchBar.Text?.Trim() ?? "";
         _ = LoadMapAsync();
     }
 
-    private void OnClearSearch(object sender, EventArgs e)
+    private void OnClearSearch(object? sender, EventArgs e)
     {
         SearchBar.Text = "";
         _search        = "";
         _ = LoadMapAsync();
     }
 
-    private async void OnNextClicked(object sender, EventArgs e)
+    private async void OnNextClicked(object? sender, EventArgs e)
     {
         if (_resultMarkers.Count < 2) return;
         _resultIndex = (_resultIndex + 1) % _resultMarkers.Count;

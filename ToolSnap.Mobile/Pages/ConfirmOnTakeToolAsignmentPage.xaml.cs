@@ -153,7 +153,7 @@ public partial class ConfirmOnTakeToolAsignmentPage : ContentPage
         }
     }
 
-    private async void OnConfirmClicked(object sender, EventArgs e)
+    private async void OnConfirmClicked(object? sender, EventArgs e)
     {
         if (PhotoSession is null)
             return;
