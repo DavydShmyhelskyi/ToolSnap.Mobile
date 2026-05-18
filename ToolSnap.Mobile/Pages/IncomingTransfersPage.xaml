@@ -9,14 +9,13 @@
 
             <!-- Incoming section -->
             <Label Text="Incoming Requests"
-                   FontSize="22"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                   Style="{StaticResource PageTitleLabel}"
+                   FontSize="22" />
 
             <Label x:Name="NoIncomingLabel"
                    Text="No pending incoming requests."
                    FontSize="14"
-                   TextColor="{AppThemeBinding Light=#999999, Dark=#777777}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}"
                    IsVisible="True" />
 
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding IncomingItems}">
@@ -26,36 +25,34 @@
                                 Padding="14"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
-                                Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardBg}, Dark={StaticResource CardBgDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorderDark}}">
                             <VerticalStackLayout Spacing="6">
 
                                 <Label Text="{Binding ToolLabel}"
                                        FontAttributes="Bold"
                                        FontSize="15"
-                                       TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource TextPrimaryDark}}" />
 
                                 <Label Text="{Binding OtherUserName, StringFormat='From: {0}'}"
                                        FontSize="13"
-                                       TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondary}, Dark={StaticResource TextSecondaryDark}}" />
 
                                 <Label Text="{Binding InitiatedAtText}"
                                        FontSize="12"
-                                       TextColor="{AppThemeBinding Light=#999999, Dark=#777777}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}" />
 
                                 <Grid ColumnDefinitions="*,*"
                                       ColumnSpacing="10"
                                       Margin="0,6,0,0">
                                     <Button Text="Accept"
-                                            BackgroundColor="#388E3C"
-                                            TextColor="White"
+                                            Style="{StaticResource SuccessButton}"
                                             CornerRadius="8"
                                             HeightRequest="40"
                                             Command="{Binding AcceptCommand}" />
                                     <Button Grid.Column="1"
                                             Text="Reject"
-                                            BackgroundColor="#D32F2F"
-                                            TextColor="White"
+                                            Style="{StaticResource DestructiveButton}"
                                             CornerRadius="8"
                                             HeightRequest="40"
                                             Command="{Binding RejectCommand}" />
@@ -72,14 +69,13 @@
 
             <!-- Outgoing section -->
             <Label Text="My Outgoing Requests"
-                   FontSize="22"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                   Style="{StaticResource PageTitleLabel}"
+                   FontSize="22" />
 
             <Label x:Name="NoOutgoingLabel"
                    Text="No outgoing transfer requests."
                    FontSize="14"
-                   TextColor="{AppThemeBinding Light=#999999, Dark=#777777}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}"
                    IsVisible="True" />
 
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding OutgoingItems}">
@@ -89,31 +85,30 @@
                                 Padding="14"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 12"
-                                BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
-                                Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardBg}, Dark={StaticResource CardBgDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorderDark}}">
                             <VerticalStackLayout Spacing="6">
 
                                 <Label Text="{Binding ToolLabel}"
                                        FontAttributes="Bold"
                                        FontSize="15"
-                                       TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource TextPrimaryDark}}" />
 
                                 <Label Text="{Binding OtherUserName, StringFormat='To: {0}'}"
                                        FontSize="13"
-                                       TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextSecondary}, Dark={StaticResource TextSecondaryDark}}" />
 
                                 <Label Text="{Binding Status}"
                                        FontSize="13"
                                        FontAttributes="Bold"
-                                       TextColor="#F57C00" />
+                                       TextColor="{AppThemeBinding Light={StaticResource AccentOrange}, Dark={StaticResource AccentOrangeDark}}" />
 
                                 <Label Text="{Binding InitiatedAtText}"
                                        FontSize="12"
-                                       TextColor="{AppThemeBinding Light=#999999, Dark=#777777}" />
+                                       TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}" />
 
                                 <Button Text="Cancel"
-                                        BackgroundColor="#F57C00"
-                                        TextColor="White"
+                                        Style="{StaticResource DestructiveButton}"
                                         CornerRadius="8"
                                         HeightRequest="40"
                                         IsVisible="{Binding CanCancel}"

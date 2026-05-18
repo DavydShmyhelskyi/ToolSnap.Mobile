@@ -8,23 +8,22 @@
         <VerticalStackLayout Padding="20" Spacing="16">
 
             <Label Text="Transfer Tool"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                   Style="{StaticResource PageTitleLabel}"
+                   FontSize="24" />
 
             <!-- Selected tool card -->
             <Border Padding="14"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 12"
-                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
-                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CardBg}, Dark={StaticResource CardBgDark}}"
+                    Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorderDark}}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
 
                     <Border WidthRequest="64"
                             HeightRequest="64"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 8"
-                            BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#3A3A3C}">
+                            BackgroundColor="{AppThemeBinding Light={StaticResource PhotoBg}, Dark={StaticResource PhotoBgDark}}">
                         <Image x:Name="ToolPhoto" Aspect="AspectFill" />
                     </Border>
 
@@ -34,10 +33,10 @@
                         <Label x:Name="ToolTypeLabel"
                                FontAttributes="Bold"
                                FontSize="16"
-                               TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                               TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource TextPrimaryDark}}" />
                         <Label x:Name="ToolSerialLabel"
                                FontSize="14"
-                               TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
+                               TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}" />
                     </VerticalStackLayout>
 
                 </Grid>
@@ -45,15 +44,14 @@
 
             <!-- Recipient picker -->
             <Label Text="Select recipient"
-                   FontSize="15"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}" />
+                   Style="{StaticResource FieldLabel}"
+                   FontSize="15" />
 
             <Border Padding="4"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 10"
-                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
-                    Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CardBg}, Dark={StaticResource CardBgDark}}"
+                    Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorderDark}}">
                 <Picker x:Name="RecipientPicker"
                         Title="Choose a user..."
                         ItemsSource="{Binding Users}"
@@ -63,21 +61,17 @@
 
             <!-- Optional photo section -->
             <Label Text="Optional photo"
-                   FontSize="15"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#333333, Dark=#EEEEEE}" />
+                   Style="{StaticResource FieldLabel}"
+                   FontSize="15" />
 
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                 <Button Text="Camera"
-                        BackgroundColor="#E65100"
-                        TextColor="White"
                         CornerRadius="10"
                         HeightRequest="44"
                         Clicked="OnCameraClicked" />
                 <Button Grid.Column="1"
                         Text="Gallery"
-                        BackgroundColor="#455A64"
-                        TextColor="White"
+                        Style="{StaticResource SlateButton}"
                         CornerRadius="10"
                         HeightRequest="44"
                         Clicked="OnGalleryClicked" />
@@ -88,7 +82,7 @@
                     HeightRequest="180"
                     StrokeThickness="0"
                     StrokeShape="RoundRectangle 10"
-                    BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#3A3A3C}">
+                    BackgroundColor="{AppThemeBinding Light={StaticResource PhotoBg}, Dark={StaticResource PhotoBgDark}}">
                 <Image x:Name="PhotoPreview" Aspect="AspectFit" />
             </Border>
 
@@ -98,8 +92,7 @@
                     HeightRequest="52"
                     FontSize="17"
                     CornerRadius="12"
-                    BackgroundColor="#7B1FA2"
-                    TextColor="White"
+                    Style="{StaticResource PurpleButton}"
                     IsEnabled="False"
                     Clicked="OnConfirmClicked"
                     Margin="0,8,0,0" />

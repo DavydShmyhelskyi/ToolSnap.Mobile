@@ -12,13 +12,11 @@
                                  Spacing="12">
 
                 <Button Text="Sign in with Biometrics"
-                        Clicked="OnBiometricClicked"
-                        BackgroundColor="{AppThemeBinding Light=#E65100, Dark=#FF8A50}"
-                        TextColor="White" />
+                        Clicked="OnBiometricClicked" />
 
                 <Label Text="— or sign in with password —"
                        HorizontalOptions="Center"
-                       TextColor="{AppThemeBinding Light=Gray, Dark=#999999}"
+                       TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}"
                        FontSize="13" />
 
             </VerticalStackLayout>

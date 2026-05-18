@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
-<ResourceDictionary 
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -42,7 +42,7 @@
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
 
-    <!-- Semantic light/dark pairs — use inside AppThemeBinding in Styles.xaml -->
+    <!-- ── Page / surface ── -->
     <Color x:Key="PageBg">#F5F5F5</Color>
     <Color x:Key="PageBgDark">#1F1F1F</Color>
 
@@ -51,6 +51,7 @@
     <Color x:Key="CardBorder">#E0E0E0</Color>
     <Color x:Key="CardBorderDark">#3A3A3C</Color>
 
+    <!-- ── Text hierarchy ── -->
     <Color x:Key="TextPrimary">#222222</Color>
     <Color x:Key="TextPrimaryDark">#F0F0F0</Color>
     <Color x:Key="TextSecondary">#555555</Color>
@@ -58,11 +59,47 @@
     <Color x:Key="TextMuted">#777777</Color>
     <Color x:Key="TextMutedDark">#888888</Color>
 
+    <!-- ── Misc surface ── -->
     <Color x:Key="PhotoBg">#EEEEEE</Color>
     <Color x:Key="PhotoBgDark">#3A3A3C</Color>
     <Color x:Key="DividerColor">#DDDDDD</Color>
     <Color x:Key="DividerColorDark">#3A3A3C</Color>
 
+    <!-- ── Accent / brand ── -->
     <Color x:Key="AccentOrange">#E65100</Color>
     <Color x:Key="AccentOrangeDark">#FF8A50</Color>
+
+    <!-- ── Button role tokens ── -->
+    <Color x:Key="BtnSuccess">#388E3C</Color>
+    <Color x:Key="BtnSuccessDark">#4CAF50</Color>
+    <Color x:Key="BtnDestructive">#D32F2F</Color>
+    <Color x:Key="BtnDestructiveDark">#EF5350</Color>
+    <Color x:Key="BtnPurple">#7B1FA2</Color>
+    <Color x:Key="BtnPurpleDark">#AB47BC</Color>
+    <Color x:Key="BtnSlate">#455A64</Color>
+    <Color x:Key="BtnSlateDark">#607D8B</Color>
+
+    <!-- ── Activity event accent colors (used in code bindings) ── -->
+    <!-- Visible on both #F0F0F0 light cards and #2C2C2E dark cards -->
+    <Color x:Key="ActivityTookColor">#E65100</Color>
+    <Color x:Key="ActivityReturnedColor">#43A047</Color>
+    <Color x:Key="ActivitySentColor">#1976D2</Color>
+    <Color x:Key="ActivityReceivedColor">#AB47BC</Color>
+
+    <!-- ── Shell / flyout ── -->
+    <Color x:Key="FlyoutHeaderBg">#E65100</Color>
+    <Color x:Key="FlyoutHeaderBgDark">#2C2C2E</Color>
+
+    <!-- ── Warm card (liability) ── -->
+    <Color x:Key="WarmCardBg">#FFF3E0</Color>
+    <Color x:Key="WarmCardBgDark">#3E2000</Color>
+    <Color x:Key="WarmCardBorder">#FFE0B2</Color>
+    <Color x:Key="WarmCardBorderDark">#7A3E00</Color>
+
+    <!-- ── Status badge ── -->
+    <Color x:Key="BadgeBg">#E0E0E0</Color>
+    <Color x:Key="BadgeBgDark">#3A3A3C</Color>
+    <Color x:Key="BadgeText">#555555</Color>
+    <Color x:Key="BadgeTextDark">#CCCCCC</Color>
+
 </ResourceDictionary>

@@ -12,13 +12,13 @@
             <Label Text="ToolSnap"
                    FontAttributes="Bold"
                    FontSize="30"
-                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource TextPrimaryDark}}"
                    HorizontalOptions="Center"
                    Margin="0,10" />
 
             <Label Text="Choose an action"
                    FontSize="18"
-                   TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondary}, Dark={StaticResource TextSecondaryDark}}"
                    HorizontalOptions="Center"
                    Margin="0,0,0,20" />
 
@@ -27,8 +27,6 @@
                     WidthRequest="250"
                     FontSize="20"
                     CornerRadius="12"
-                    BackgroundColor="#E65100"
-                    TextColor="White"
                     Clicked="OnMapClicked" />
 
             <Button Text="Take a tool"
@@ -36,8 +34,7 @@
                     WidthRequest="250"
                     FontSize="20"
                     CornerRadius="12"
-                    BackgroundColor="#388E3C"
-                    TextColor="White"
+                    Style="{StaticResource SuccessButton}"
                     Clicked="OnTakeClicked" />
 
             <Button Text="Return a tool"
@@ -45,8 +42,6 @@
                     WidthRequest="250"
                     FontSize="20"
                     CornerRadius="12"
-                    BackgroundColor="#F57C00"
-                    TextColor="White"
                     Clicked="OnReturnClicked" />
 
         </VerticalStackLayout>

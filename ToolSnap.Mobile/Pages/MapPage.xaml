@@ -23,6 +23,7 @@
             <Button Text="Clear"
                     Grid.Column="1"
                     Padding="12,0"
+                    Style="{StaticResource SecondaryButton}"
                     Clicked="OnClearSearch" />
         </Grid>
 

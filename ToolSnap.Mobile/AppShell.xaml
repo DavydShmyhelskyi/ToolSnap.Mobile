@@ -7,10 +7,10 @@
     xmlns:pages="clr-namespace:ToolSnap.Mobile.Pages"
     Title="ToolSnap.Mobile">
 
-    <!-- Flyout header — blue brand bar with a red badge when transfers are pending -->
+    <!-- Flyout header — brand bar that follows the active theme -->
     <Shell.FlyoutHeader>
         <VerticalStackLayout x:Name="FlyoutHeaderLayout"
-                             BackgroundColor="#E65100"
+                             BackgroundColor="{AppThemeBinding Light={StaticResource FlyoutHeaderBg}, Dark={StaticResource FlyoutHeaderBgDark}}"
                              Padding="20,28,20,18"
                              Spacing="0">
 

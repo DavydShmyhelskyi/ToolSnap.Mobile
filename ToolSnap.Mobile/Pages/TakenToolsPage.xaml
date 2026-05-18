@@ -9,9 +9,7 @@
 
             <Label Grid.Row="0"
                    Text="Taken tools"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}"
+                   Style="{StaticResource PageTitleLabel}"
                    Margin="0,0,0,8" />
 
             <!-- Liability summary card -->
@@ -20,22 +18,21 @@
                     Padding="14,10"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 10"
-                    BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#3E2000}"
-                    Stroke="{AppThemeBinding Light=#FFE0B2, Dark=#7A3E00}">
+                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmCardBg}, Dark={StaticResource WarmCardBgDark}}"
+                    Stroke="{AppThemeBinding Light={StaticResource WarmCardBorder}, Dark={StaticResource WarmCardBorderDark}}">
                 <Grid ColumnDefinitions="*,Auto">
                     <VerticalStackLayout Spacing="2">
                         <Label Text="Total liability"
                                FontSize="12"
-                               TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondary}, Dark={StaticResource TextSecondaryDark}}" />
                         <Label Text="{Binding TotalLiabilityText}"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="{AppThemeBinding Light=#E65100, Dark=#FF8A50}" />
+                               Style="{StaticResource PriceLabel}"
+                               FontSize="20" />
                     </VerticalStackLayout>
                     <Label Grid.Column="1"
                            Text="{Binding ToolCountText}"
                            FontSize="13"
-                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}"
+                           TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}"
                            VerticalOptions="Center" />
                 </Grid>
             </Border>
@@ -62,7 +59,7 @@
                                         Padding="0"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 8"
-                                        BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#3A3A3C}">
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource PhotoBg}, Dark={StaticResource PhotoBgDark}}">
                                     <Image Source="{Binding Photo}" Aspect="AspectFill" />
                                 </Border>
 
@@ -86,25 +83,23 @@
                                     <Label Text="{Binding ToolTypeTitle}"
                                            FontAttributes="Bold"
                                            FontSize="16"
-                                           TextColor="{AppThemeBinding Light=#222222, Dark=#F0F0F0}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource TextPrimaryDark}}" />
 
                                     <Label Text="{Binding SerialNumber}"
                                            FontSize="14"
-                                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}" />
 
                                     <Label Text="{Binding PriceText}"
-                                           FontSize="13"
-                                           FontAttributes="Bold"
-                                           TextColor="{AppThemeBinding Light=#E65100, Dark=#FF8A50}" />
+                                           Style="{StaticResource PriceLabel}"
+                                           FontSize="13" />
 
                                     <Label IsVisible="{Binding HasDeadline}"
                                            Text="{Binding DueAtText, StringFormat='Due: {0}'}"
                                            FontSize="12"
-                                           TextColor="{AppThemeBinding Light=#555555, Dark=#AAAAAA}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextSecondary}, Dark={StaticResource TextSecondaryDark}}" />
 
                                     <Button Text="Transfer"
-                                            BackgroundColor="#7B1FA2"
-                                            TextColor="White"
+                                            Style="{StaticResource PurpleButton}"
                                             CornerRadius="8"
                                             FontSize="13"
                                             HeightRequest="34"

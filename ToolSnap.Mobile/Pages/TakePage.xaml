@@ -12,8 +12,8 @@
             <Border HeightRequest="250"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 12"
-                    BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
-                    Stroke="{AppThemeBinding Light=#DDDDDD, Dark=#3A3A3C}">
+                    BackgroundColor="{AppThemeBinding Light={StaticResource CardBg}, Dark={StaticResource CardBgDark}}"
+                    Stroke="{AppThemeBinding Light={StaticResource CardBorder}, Dark={StaticResource CardBorderDark}}">
                 <Image x:Name="PreviewImage" Aspect="AspectFill" />
             </Border>
 
@@ -23,16 +23,13 @@
                 <Button Text="Camera"
                         HeightRequest="55"
                         CornerRadius="10"
-                        BackgroundColor="#E65100"
-                        TextColor="White"
                         Clicked="OnCameraClicked" />
 
                 <Button Text="Gallery"
                         Grid.Column="1"
                         HeightRequest="55"
                         CornerRadius="10"
-                        BackgroundColor="#455A64"
-                        TextColor="White"
+                        Style="{StaticResource SlateButton}"
                         Clicked="OnGalleryClicked" />
             </Grid>
 
@@ -51,8 +48,7 @@
                     Clicked="OnTakeClicked"
                     HeightRequest="60"
                     CornerRadius="12"
-                    BackgroundColor="#388E3C"
-                    TextColor="White"
+                    Style="{StaticResource SuccessButton}"
                     FontSize="20" />
 
         </VerticalStackLayout>

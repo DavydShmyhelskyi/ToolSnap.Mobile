@@ -60,7 +60,7 @@ public class ActivityHistoryService(HttpClient httpClient, UserSessionService se
             {
                 items.Add(new ActivityItem(
                     "Returned tool",
-                    "#2E7D32",
+                    "#43A047",
                     display,
                     FormatDate(a.ReturnedAt.Value),
                     null,
@@ -73,7 +73,7 @@ public class ActivityHistoryService(HttpClient httpClient, UserSessionService se
             var display = ToolDisplay(t.ToolId, toolMap);
             items.Add(new ActivityItem(
                 "Transfer sent",
-                "#E65100",
+                "#1976D2",
                 display,
                 FormatDate(t.InitiatedAt),
                 t.Status,
@@ -86,7 +86,7 @@ public class ActivityHistoryService(HttpClient httpClient, UserSessionService se
             var eventTime = t.RespondedAt ?? t.InitiatedAt;
             items.Add(new ActivityItem(
                 "Transfer received",
-                "#6A1B9A",
+                "#AB47BC",
                 display,
                 FormatDate(eventTime),
                 t.Status,

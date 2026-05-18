@@ -8,6 +8,7 @@
 
         <Button Grid.Row="0"
                 Text="Refresh"
+                Style="{StaticResource SecondaryButton}"
                 Margin="16,12"
                 HorizontalOptions="End"
                 Clicked="OnRefreshClicked" />
@@ -23,7 +24,7 @@
                            HorizontalOptions="Center"
                            VerticalOptions="Center"
                            Margin="0,40"
-                           TextColor="{AppThemeBinding Light=Gray, Dark=#888888}"
+                           TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}"
                            FontSize="16" />
                 </CollectionView.EmptyView>
 
@@ -33,7 +34,7 @@
                                 Padding="14,12"
                                 StrokeThickness="0"
                                 StrokeShape="RoundRectangle 10"
-                                BackgroundColor="{AppThemeBinding Light=#F0F0F0, Dark=#2C2C2E}">
+                                BackgroundColor="{AppThemeBinding Light={StaticResource BadgeBg}, Dark={StaticResource CardBgDark}}">
                             <Grid ColumnDefinitions="6,*,Auto" ColumnSpacing="12">
 
                                 <!-- Coloured left accent bar -->
@@ -53,11 +54,11 @@
 
                                     <Label Text="{Binding ToolDisplay}"
                                            FontSize="14"
-                                           TextColor="{AppThemeBinding Light=#333333, Dark=#F0F0F0}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextPrimary}, Dark={StaticResource TextPrimaryDark}}" />
 
                                     <Label Text="{Binding Timestamp}"
                                            FontSize="12"
-                                           TextColor="{AppThemeBinding Light=#777777, Dark=#888888}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource TextMuted}, Dark={StaticResource TextMutedDark}}" />
 
                                 </VerticalStackLayout>
 
@@ -68,10 +69,10 @@
                                         StrokeShape="RoundRectangle 8"
                                         Padding="8,4"
                                         VerticalOptions="Center"
-                                        BackgroundColor="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}">
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource BadgeBg}, Dark={StaticResource BadgeBgDark}}">
                                     <Label Text="{Binding StatusBadge}"
                                            FontSize="11"
-                                           TextColor="{AppThemeBinding Light=#555555, Dark=#CCCCCC}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource BadgeText}, Dark={StaticResource BadgeTextDark}}" />
                                 </Border>
 
                             </Grid>
