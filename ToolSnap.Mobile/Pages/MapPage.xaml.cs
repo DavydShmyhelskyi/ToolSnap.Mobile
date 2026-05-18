@@ -98,15 +98,7 @@ public partial class MapPage : ContentPage
             _resultMarkers = [.. markers.OrderBy(m => Dist(userLat, userLon, m.Latitude, m.Longitude))];
             _resultIndex   = 0;
 
-            double centerLat = _resultMarkers.Count > 0 ? _resultMarkers[0].Latitude  : userLat;
-            double centerLon = _resultMarkers.Count > 0 ? _resultMarkers[0].Longitude : userLon;
-
-            string markersJson = JsonSerializer.Serialize(_resultMarkers, _jsonOpts);
-            MapWebView.Source  = new HtmlWebViewSource
-            {
-                Html = BuildHtml(centerLat, centerLon, markersJson, _resultMarkers.Count > 0)
-            };
-
+            RenderWebView();
             UpdateNavigationUI();
         }
         catch (Exception ex)
@@ -114,6 +106,34 @@ public partial class MapPage : ContentPage
             await DisplayAlertAsync("Error", ex.Message, "OK");
         }
     }
+
+    private void RenderWebView()
+    {
+        bool isDark = Application.Current?.RequestedTheme == AppTheme.Dark;
+        double userLat = _session.CurrentUser?.Latitude  ?? 50.4501;
+        double userLon = _session.CurrentUser?.Longitude ?? 30.5234;
+        double centerLat = _resultMarkers.Count > 0 ? _resultMarkers[_resultIndex].Latitude  : userLat;
+        double centerLon = _resultMarkers.Count > 0 ? _resultMarkers[_resultIndex].Longitude : userLon;
+        string markersJson = JsonSerializer.Serialize(_resultMarkers, _jsonOpts);
+        MapWebView.Source = new HtmlWebViewSource
+        {
+            Html = BuildHtml(centerLat, centerLon, markersJson, _resultMarkers.Count > 0, isDark)
+        };
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        Application.Current!.RequestedThemeChanged += OnThemeChanged;
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        Application.Current!.RequestedThemeChanged -= OnThemeChanged;
+    }
+
+    private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e) => RenderWebView();
 
     private void OnSearchPressed(object? sender, EventArgs e)
     {
@@ -151,10 +171,13 @@ public partial class MapPage : ContentPage
     private static double Dist(double lat1, double lon1, double lat2, double lon2) =>
         (lat1 - lat2) * (lat1 - lat2) + (lon1 - lon2) * (lon1 - lon2);
 
-    private static string BuildHtml(double lat, double lon, string markersJson, bool hasResults)
+    private static string BuildHtml(double lat, double lon, string markersJson, bool hasResults, bool isDark = false)
     {
         string sLat = lat.ToString(CultureInfo.InvariantCulture);
         string sLon = lon.ToString(CultureInfo.InvariantCulture);
+        string darkCss = isDark
+            ? "html,body,#map,.leaflet-container{background:#1F1F1F;}"
+            : "";
 
         return $@"<!DOCTYPE html>
 <html>
@@ -163,6 +186,7 @@ public partial class MapPage : ContentPage
 <style>
   html,body{{height:100%;margin:0;padding:0;}}
   #map{{height:100%;width:100%;}}
+  {darkCss}
 </style>
 <link rel='stylesheet' href='https://unpkg.com/leaflet@1.9.3/dist/leaflet.css'/>
 <script src='https://unpkg.com/leaflet@1.9.3/dist/leaflet.js'></script>

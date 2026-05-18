@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ToolSnap.Mobile.Pages.MapPage"
              Title="Map"
-             BackgroundColor="#F5F5F5">
+             BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#1F1F1F}">
 
     <Grid RowDefinitions="Auto,Auto,*,Auto"
           Padding="10"
@@ -55,10 +55,10 @@
 
         <!-- Map -->
         <Border Grid.Row="2"
-                Stroke="#CCCCCC"
+                Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#3A3A3C}"
                 StrokeThickness="1"
                 StrokeShape="RoundRectangle 8"
-                BackgroundColor="White">
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}">
             <WebView x:Name="MapWebView" />
         </Border>
 
@@ -78,7 +78,7 @@
                     Text="Next ›"
                     IsVisible="False"
                     Padding="16,8"
-                    BackgroundColor="#1565C0"
+                    BackgroundColor="{AppThemeBinding Light=#E65100, Dark=#FF8A50}"
                     TextColor="White"
                     CornerRadius="8"
                     Clicked="OnNextClicked" />

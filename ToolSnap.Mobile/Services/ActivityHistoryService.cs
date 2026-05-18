@@ -50,7 +50,7 @@ public class ActivityHistoryService(HttpClient httpClient, UserSessionService se
 
             items.Add(new ActivityItem(
                 "Took tool",
-                "#1565C0",
+                "#E65100",
                 display,
                 FormatDate(a.TakenAt),
                 null,

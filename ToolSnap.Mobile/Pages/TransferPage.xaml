@@ -69,7 +69,7 @@
 
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                 <Button Text="Camera"
-                        BackgroundColor="#1976D2"
+                        BackgroundColor="#E65100"
                         TextColor="White"
                         CornerRadius="10"
                         HeightRequest="44"

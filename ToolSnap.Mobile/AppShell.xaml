@@ -10,7 +10,7 @@
     <!-- Flyout header — blue brand bar with a red badge when transfers are pending -->
     <Shell.FlyoutHeader>
         <VerticalStackLayout x:Name="FlyoutHeaderLayout"
-                             BackgroundColor="#1565C0"
+                             BackgroundColor="#E65100"
                              Padding="20,28,20,18"
                              Spacing="0">
 

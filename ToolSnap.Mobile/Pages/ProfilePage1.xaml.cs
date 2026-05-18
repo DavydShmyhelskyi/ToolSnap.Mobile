@@ -10,7 +10,7 @@ public partial class ProfilePage1 : ContentPage
     private readonly HttpClient _httpClient;
     private readonly UserSessionService _session;
 
-    private static readonly Color ActiveColor   = Color.FromArgb("#1976D2");
+    private static readonly Color ActiveColor   = Color.FromArgb("#E65100");
     private static readonly Color InactiveLight = Color.FromArgb("#E0E0E0");
     private static readonly Color InactiveDark  = Color.FromArgb("#3A3A3C");
 

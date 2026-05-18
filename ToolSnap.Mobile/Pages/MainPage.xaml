@@ -13,7 +13,7 @@
 
                 <Button Text="Sign in with Biometrics"
                         Clicked="OnBiometricClicked"
-                        BackgroundColor="{AppThemeBinding Light=#1565C0, Dark=#1E88E5}"
+                        BackgroundColor="{AppThemeBinding Light=#E65100, Dark=#FF8A50}"
                         TextColor="White" />
 
                 <Label Text="— or sign in with password —"

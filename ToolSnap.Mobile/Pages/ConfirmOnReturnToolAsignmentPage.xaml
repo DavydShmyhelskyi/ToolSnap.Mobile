@@ -69,7 +69,7 @@
                                 <Label Text="{Binding PriceText, StringFormat='Price: {0}'}"
                                        FontSize="12"
                                        FontAttributes="Bold"
-                                       TextColor="{AppThemeBinding Light=#1565C0, Dark=#64B5F6}" />
+                                       TextColor="{AppThemeBinding Light=#E65100, Dark=#FF8A50}" />
 
                             </VerticalStackLayout>
 

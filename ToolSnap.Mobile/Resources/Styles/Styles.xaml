@@ -436,7 +436,7 @@
     </Style>
 
     <Style x:Key="PriceLabel" TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AccentBlue}, Dark={StaticResource AccentBlueDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource AccentOrange}, Dark={StaticResource AccentOrangeDark}}" />
         <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 

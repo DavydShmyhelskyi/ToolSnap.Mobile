@@ -27,7 +27,7 @@
                     WidthRequest="250"
                     FontSize="20"
                     CornerRadius="12"
-                    BackgroundColor="#1976D2"
+                    BackgroundColor="#E65100"
                     TextColor="White"
                     Clicked="OnMapClicked" />
 

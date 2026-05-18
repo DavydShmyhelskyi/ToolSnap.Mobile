@@ -14,7 +14,7 @@ public static class AppToast
         ShowAsync(message, Color.FromArgb("#C62828"));
 
     public static Task ShowInfoAsync(string message) =>
-        ShowAsync(message, Color.FromArgb("#1565C0"));
+        ShowAsync(message, Color.FromArgb("#E65100"));
 
     private static Task ShowAsync(string message, Color background)
     {
