@@ -19,15 +19,25 @@ public sealed class UserSessionService
 
     public bool IsLoggedIn => CurrentUser != null;
 
+    public void SetUser(UserDto user)
+    {
+        CurrentUser = user;
+        var json = JsonSerializer.Serialize(user);
+        Preferences.Set(UserKey, json);
+    }
+
     public async Task SetUserAsync(AuthenticationResponseDto authResponse)
     {
         CurrentUser = new UserDto(
             authResponse.Id,
             authResponse.FullName,
             authResponse.Email,
-            authResponse.Role,
+            authResponse.EmailConfirmed,
+            authResponse.RoleId,
             authResponse.IsActive,
-            authResponse.EmailConfirmed);
+            DateTime.UtcNow,
+            null,
+            null);
 
         var json = JsonSerializer.Serialize(CurrentUser);
         Preferences.Set(UserKey, json);
