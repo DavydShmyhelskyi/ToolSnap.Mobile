@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Net.Http.Json;
 using System.Text.Json;
 using ToolSnap.Mobile.Dtos;
 using ToolSnap.Mobile.Models;
@@ -65,19 +67,44 @@ public partial class IncomingTransfersPage : ContentPage
             var incoming = await incomingTask;
             var outgoing = await outgoingTask;
 
-            // Resolve tool info for each unique tool ID
+            // Collect unique tool IDs across both lists
             var uniqueToolIds = incoming.Select(t => t.ToolId)
                 .Concat(outgoing.Select(t => t.ToolId))
                 .Distinct()
                 .ToList();
 
-            var toolDict = new Dictionary<Guid, ToolDto>();
-            foreach (var toolId in uniqueToolIds)
+            // Resolve tool metadata and photos in parallel
+            var toolTasks = uniqueToolIds.Select(id =>
+                _transferService.GetToolByIdAsync(id).ContinueWith(t => (id, tool: t.Result)));
+
+            var photoTasks = uniqueToolIds.Select(async id =>
             {
-                var tool = await _transferService.GetToolByIdAsync(toolId);
-                if (tool != null)
-                    toolDict[toolId] = tool;
-            }
+                try
+                {
+                    var resp = await _httpClient.GetAsync(
+                        $"tool-photos/file?toolId={id}&photoTypeTitle=front");
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        var dto = await resp.Content.ReadFromJsonAsync<ToolPhotoFileDto>(JsonOptions);
+                        if (dto?.Content is { Length: > 0 })
+                            return (id, photo: ImageSource.FromStream(() => new MemoryStream(dto.Content)));
+                    }
+                }
+                catch { }
+
+                return (id, photo: (ImageSource?)null);
+            });
+
+            var toolResults  = await Task.WhenAll(toolTasks);
+            var photoResults = await Task.WhenAll(photoTasks);
+
+            var toolDict  = toolResults
+                .Where(r => r.tool != null)
+                .ToDictionary(r => r.id, r => r.tool!);
+
+            var photoDict = photoResults
+                .ToDictionary(r => r.id, r => r.photo);
 
             string BuildToolLabel(Guid toolId)
             {
@@ -95,21 +122,25 @@ public partial class IncomingTransfersPage : ContentPage
                     ? name
                     : $"User #{userId.ToString()[..8]}";
 
+            ImageSource? GetPhoto(Guid toolId) =>
+                photoDict.GetValueOrDefault(toolId);
+
             // Populate incoming list
             IncomingItems.Clear();
             foreach (var t in incoming)
             {
                 var item = new TransferListItem
                 {
-                    TransferId = t.Id,
-                    ToolId = t.ToolId,
-                    ToolLabel = BuildToolLabel(t.ToolId),
-                    OtherUserName = ResolveUser(t.FromUserId),
-                    Status = t.Status,
+                    TransferId      = t.Id,
+                    ToolId          = t.ToolId,
+                    ToolLabel       = BuildToolLabel(t.ToolId),
+                    OtherUserName   = ResolveUser(t.FromUserId),
+                    Status          = t.Status,
                     InitiatedAtText = t.InitiatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"),
-                    CanAccept = true,
-                    CanReject = true,
-                    CanCancel = false
+                    Photo           = GetPhoto(t.ToolId),
+                    CanAccept       = true,
+                    CanReject       = true,
+                    CanCancel       = false
                 };
                 item.AcceptCommand = new Command(async () => await AcceptAsync(item));
                 item.RejectCommand = new Command(async () => await RejectAsync(item));
@@ -122,15 +153,16 @@ public partial class IncomingTransfersPage : ContentPage
             {
                 var item = new TransferListItem
                 {
-                    TransferId = t.Id,
-                    ToolId = t.ToolId,
-                    ToolLabel = BuildToolLabel(t.ToolId),
-                    OtherUserName = ResolveUser(t.ToUserId),
-                    Status = t.Status,
+                    TransferId      = t.Id,
+                    ToolId          = t.ToolId,
+                    ToolLabel       = BuildToolLabel(t.ToolId),
+                    OtherUserName   = ResolveUser(t.ToUserId),
+                    Status          = t.Status,
                     InitiatedAtText = t.InitiatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm"),
-                    CanAccept = false,
-                    CanReject = false,
-                    CanCancel = t.Status == "Pending"
+                    Photo           = GetPhoto(t.ToolId),
+                    CanAccept       = false,
+                    CanReject       = false,
+                    CanCancel       = t.Status == "Pending"
                 };
                 item.CancelCommand = new Command(async () => await CancelAsync(item));
                 OutgoingItems.Add(item);

@@ -11,6 +11,9 @@ public class TransferListItem
     public bool CanAccept { get; init; }
     public bool CanReject { get; init; }
     public bool CanCancel { get; init; }
+    public ImageSource? Photo { get; init; }
+    public bool HasPhoto => Photo is not null;
+    public bool HasNoPhoto => Photo is null;
     public Command? AcceptCommand { get; set; }
     public Command? RejectCommand { get; set; }
     public Command? CancelCommand { get; set; }
