@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using Plugin.Fingerprint;
 using ToolSnap.Mobile.Pages;
 using ToolSnap.Mobile.Services;
@@ -12,6 +13,7 @@ namespace ToolSnap.Mobile
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .UseFingerprint()
                 .ConfigureFonts(fonts =>
                 {

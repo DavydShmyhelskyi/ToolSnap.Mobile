@@ -117,11 +117,10 @@ public partial class ProfilePage1 : ContentPage
             if (updatedUser is not null)
                 _session.SetUser(updatedUser);
 
-            await DisplayAlertAsync("Success", "Password updated successfully.", "OK");
-
             CurrentPasswordEntry.Text = "";
             NewPasswordEntry.Text = "";
             ConfirmPasswordEntry.Text = "";
+            await AppToast.ShowSuccessAsync("Password updated successfully.");
         }
         catch (Exception ex)
         {

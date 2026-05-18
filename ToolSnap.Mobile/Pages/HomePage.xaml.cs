@@ -25,7 +25,7 @@ public partial class HomePage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Navigation error", ex.ToString(), "OK");
+            await DisplayAlertAsync("Navigation error", ex.Message, "OK");
         }
     }
 }

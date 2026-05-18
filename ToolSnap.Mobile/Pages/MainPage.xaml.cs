@@ -99,20 +99,11 @@ public partial class MainPage : ContentPage
             {
                 longitude = loc.Longitude;
                 latitude = loc.Latitude;
-
-                await DisplayAlertAsync(
-                    "GPS координації",
-                    $"Latitude: {latitude}\nLongitude: {longitude}",
-                    "OK");
-            }
-            else
-            {
-                await DisplayAlertAsync("GPS", "Не вдалося отримати дані геолокації", "OK");
             }
         }
-        catch (Exception ex)
+        catch
         {
-            await DisplayAlertAsync("GPS Error", $"Не вдалося отримати координати.\n{ex.Message}", "OK");
+            // GPS is best-effort; login proceeds without coordinates
         }
 
         await PerformLoginAsync(email, password, longitude, latitude, isBiometric: false);
@@ -136,7 +127,11 @@ public partial class MainPage : ContentPage
                 }
                 else
                 {
-                    await DisplayAlertAsync("Login Failed", $"{response.StatusCode}\n{responseText}", "OK");
+                    var statusCode = (int)response.StatusCode;
+                    var msg = statusCode is 400 or 401
+                        ? "Incorrect email or password."
+                        : "Sign-in failed. Please try again.";
+                    await DisplayAlertAsync("Sign In Failed", msg, "OK");
                 }
                 return;
             }
@@ -166,10 +161,10 @@ public partial class MainPage : ContentPage
                     await _bioService.EnableAsync(email, password);
             }
 
-            if (!isBiometric)
-                await DisplayAlertAsync("Success", $"Welcome {user.FullName}", "OK");
-
             await Shell.Current.GoToAsync("//home");
+
+            if (!isBiometric)
+                await AppToast.ShowSuccessAsync($"Welcome back, {user.FullName}!");
         }
         catch (Exception ex)
         {

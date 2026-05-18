@@ -158,9 +158,9 @@ public partial class IncomingTransfersPage : ContentPage
             return;
         }
 
-        await DisplayAlert("Done", "Transfer accepted. The tool is now assigned to you.", "OK");
         await RefreshAsync();
         await AppShell.RefreshBadgeAsync(_transferService, _session);
+        await AppToast.ShowSuccessAsync("Transfer accepted. The tool is now yours.");
     }
 
     private async Task RejectAsync(TransferListItem item)
@@ -176,9 +176,9 @@ public partial class IncomingTransfersPage : ContentPage
             return;
         }
 
-        await DisplayAlert("Done", "Transfer rejected.", "OK");
         await RefreshAsync();
         await AppShell.RefreshBadgeAsync(_transferService, _session);
+        await AppToast.ShowInfoAsync("Transfer rejected.");
     }
 
     private async Task CancelAsync(TransferListItem item)
@@ -194,7 +194,7 @@ public partial class IncomingTransfersPage : ContentPage
             return;
         }
 
-        await DisplayAlert("Done", "Transfer cancelled.", "OK");
         await RefreshAsync();
+        await AppToast.ShowInfoAsync("Transfer cancelled.");
     }
 }

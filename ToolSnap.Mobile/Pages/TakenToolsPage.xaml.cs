@@ -79,10 +79,7 @@ public partial class TakenToolsPage : ContentPage
 
             if (!toolTypesResponse.IsSuccessStatusCode)
             {
-                await DisplayAlertAsync(
-                    "Error",
-                    $"Failed to load tool types:\n{toolTypesResponse.StatusCode}\n{toolTypesText}",
-                    "OK");
+                await DisplayAlertAsync("Error", "Could not load tool data. Please refresh.", "OK");
                 return;
             }
 
@@ -100,10 +97,7 @@ public partial class TakenToolsPage : ContentPage
 
             if (!toolsResponse.IsSuccessStatusCode)
             {
-                await DisplayAlertAsync(
-                    "Error",
-                    $"Failed to load tools:\n{toolsResponse.StatusCode}\n{toolsText}",
-                    "OK");
+                await DisplayAlertAsync("Error", "Could not load your tools. Please refresh.", "OK");
                 return;
             }
 
@@ -193,7 +187,7 @@ public partial class TakenToolsPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlertAsync("Error", ex.ToString(), "OK");
+            await DisplayAlertAsync("Error", ex.Message, "OK");
         }
     }
 

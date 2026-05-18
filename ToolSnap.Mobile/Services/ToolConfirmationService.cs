@@ -261,12 +261,6 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
 {
     try
     {
-        // 🔥 DEBUG – вхід у метод
-        await Application.Current.Windows[0].Page.DisplayAlertAsync(
-            "DEBUG ConfirmReturn",
-            $"userId: {userId}\nitems.Count: {items?.Count ?? 0}",
-            "OK");
-
         if (items is null || items.Count == 0)
             return new ConfirmToolsResult(false, "No items to confirm.");
 
@@ -342,12 +336,6 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
 
         var locationId = location.Id;
 
-        // 🔥 DEBUG – перед пошуком assignment-ів
-        await Application.Current.Windows[0].Page.DisplayAlertAsync(
-            "DEBUG ConfirmReturn",
-            $"DetectedTools: {detectedTools.Count}\nItems: {items.Count}\nLocationId: {locationId}",
-            "OK");
-
         // 3️⃣ Для кожного item – шукаємо активний assignment
         var batchItems = new List<ReturnToolAssignmentsBatchItemDto>();
 
@@ -382,22 +370,6 @@ public async Task<ConfirmToolsResult> ConfirmReturnAsync(
                     false,
                     $"Failed to parse ToolAssignmentDto for tool {toolId}.");
             }
-
-            // 🔥 DEBUG assignment
-            await Application.Current.Windows[0].Page.DisplayAlertAsync(
-                "DEBUG ASSIGNMENT",
-                $"Item index: {i}\n" +
-                $"Selected ToolId: {toolId}\n\n" +
-                $"AssignmentId: {assignment.Id}\n" +
-                $"Assignment.ToolId: {assignment.ToolId}\n" +
-                $"UserId: {assignment.UserId}\n" +
-                $"TakenDetectedToolId: {assignment.TakenDetectedToolId}\n" +
-                $"ReturnedDetectedToolId: {assignment.ReturnedDetectedToolId}\n" +
-                $"TakenLocationId: {assignment.TakenLocationId}\n" +
-                $"ReturnedLocationId: {assignment.ReturnedLocationId}\n" +
-                $"TakenAt: {assignment.TakenAt}\n" +
-                $"ReturnedAt: {assignment.ReturnedAt}",
-                "OK");
 
             if (assignment.ReturnedAt.HasValue)
             {

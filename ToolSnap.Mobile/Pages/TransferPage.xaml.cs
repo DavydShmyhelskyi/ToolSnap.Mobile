@@ -154,7 +154,7 @@ public partial class TransferPage : ContentPage
 
         _state.Clear();
         await AppShell.RefreshBadgeAsync(_transferService, _session);
-        await DisplayAlert("Done", $"Transfer request sent to {recipient.FullName}.", "OK");
         await Shell.Current.GoToAsync("..");
+        await AppToast.ShowSuccessAsync($"Transfer request sent to {recipient.FullName}.");
     }
 }

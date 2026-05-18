@@ -169,12 +169,9 @@ public partial class ConfirmOnReturnToolAsignmentPage : ContentPage
                 return;
             }
 
-            await DisplayAlertAsync("Success",
-                "Tools returned successfully.",
-                "OK");
-
             _takeFlowState.Clear();
             await Shell.Current.GoToAsync("..");
+            await AppToast.ShowSuccessAsync("Tools returned successfully.");
         }
         catch (Exception ex)
         {
