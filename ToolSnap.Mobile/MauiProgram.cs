@@ -14,12 +14,12 @@ namespace ToolSnap.Mobile
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
-                .UseFingerprint()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+            builder.UseFingerprint();
             var handler = new HttpClientHandler();
             handler.ServerCertificateCustomValidationCallback = (msg, cert, chain, errors) => true;
 

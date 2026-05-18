@@ -105,11 +105,11 @@ public class ActivityHistoryService(HttpClient httpClient, UserSessionService se
             try
             {
                 var tool = await httpClient.GetFromJsonAsync<ToolDto>($"tools/{id}");
-                return (id, tool);
+                return (id: id, tool: tool);
             }
             catch
             {
-                return (id, (ToolDto?)null);
+                return (id: id, tool: (ToolDto?)null);
             }
         });
 
