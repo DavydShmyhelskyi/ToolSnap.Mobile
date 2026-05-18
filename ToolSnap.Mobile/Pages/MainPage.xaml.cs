@@ -113,7 +113,7 @@ public partial class MainPage : ContentPage
         try
         {
             var loginRequest = new LoginDto(email, password, longitude, latitude);
-            var response = await _httpClient.PostAsJsonAsync("users/login", loginRequest);
+            var response = await _httpClient.PostAsJsonAsync("auth/login", loginRequest);
             var responseText = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
@@ -135,18 +135,18 @@ public partial class MainPage : ContentPage
                 return;
             }
 
-            var user = JsonSerializer.Deserialize<UserDto>(
+            var authResponse = JsonSerializer.Deserialize<AuthenticationResponseDto>(
                 responseText,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            if (user == null)
+            if (authResponse == null)
             {
-                await DisplayAlertAsync("Error", "Invalid user data received", "OK");
+                await DisplayAlertAsync("Error", "Invalid authentication data received", "OK");
                 return;
             }
 
-            _session.SetUser(user);
-            _ = _fcmTokenService.RegisterAsync(user.Id);
+            await _session.SetUserAsync(authResponse);
+            _ = _fcmTokenService.RegisterAsync(authResponse.Id);
 
             if (!isBiometric && !_bioService.IsEnabled && await _bioService.IsAvailableAsync())
             {
@@ -163,7 +163,7 @@ public partial class MainPage : ContentPage
             await Shell.Current.GoToAsync("//home");
 
             if (!isBiometric)
-                await AppToast.ShowSuccessAsync($"Welcome back, {user.FullName}!");
+                await AppToast.ShowSuccessAsync($"Welcome back, {authResponse.FullName}!");
         }
         catch (Exception ex)
         {
