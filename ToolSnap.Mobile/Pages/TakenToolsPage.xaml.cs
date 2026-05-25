@@ -60,19 +60,6 @@ public partial class TakenToolsPage : ContentPage
                 return;
             }
 
-            // 🔹 0. Завантажуємо статистику відповідальності
-            var valuationResponse = await _httpClient.GetAsync($"tool-valuations/worker/{user.Id}");
-            if (valuationResponse.IsSuccessStatusCode)
-            {
-                var stats = await valuationResponse.Content.ReadFromJsonAsync<WorkerOnHandsStatsDto>(
-                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                if (stats != null)
-                {
-                    TotalLiabilityText = $"{stats.TotalValue:F2} UAH";
-                    ToolCountText = $"{stats.ToolCount} tool{(stats.ToolCount == 1 ? "" : "s")}";
-                }
-            }
-
             // 🔹 1. Завантажуємо всі типи інструментів
             var toolTypesResponse = await _httpClient.GetAsync("tool-types");
             var toolTypesText = await toolTypesResponse.Content.ReadAsStringAsync();
@@ -108,7 +95,11 @@ public partial class TakenToolsPage : ContentPage
             Tools.Clear();
 
             if (tools == null || tools.Count == 0)
+            {
+                TotalLiabilityText = "0.00 UAH";
+                ToolCountText = "0 tools";
                 return;
+            }
 
             // 🔹 3. Для кожного інструменту — довантажуємо фото й додаємо до списку
             foreach (var tool in tools)
@@ -184,6 +175,12 @@ public partial class TakenToolsPage : ContentPage
                             capturedPhoto))
                 });
             }
+
+            // 🔹 Рахуємо суму і кількість по завантаженому списку
+            var total = tools.Sum(t => t.Price);
+            var count = tools.Count;
+            TotalLiabilityText = $"{total:F2} UAH";
+            ToolCountText = $"{count} tool{(count == 1 ? "" : "s")}";
         }
         catch (Exception ex)
         {
